@@ -5,19 +5,16 @@ const error = require('../config/error');
 const config = require('../config/config');
 
 function checkPermission(req) {
-    return req.session.user.permissions.includes(
-        config.permissions.ATTRIBUTE_CATEGORY_MANAGEMENT
-    );
+    return req.session.user.permissions.includes(config.permissions.ATTRIBUTE_CATEGORY_MANAGEMENT);
 }
 
 module.exports = {
     checkPermission: checkPermission,
 
     user_add_att: (req, res, next) => {
+
         if (!checkPermission(req)) {
-            return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+            return res.status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
 
         const attribute = req.body.attribute;
@@ -25,25 +22,19 @@ module.exports = {
         const description = req.body.description;
         const groupNumber = req.session.user.groupNumber;
         if (attribute === '') {
-            return res.status(400).json({
-                success: false,
-                message: 'Attribute cannot be empty.'
-            });
+            return res.status(400).json({success: false, message: 'Attribute cannot be empty.'});
         }
         Attribute.findOne(
             {id: id, groupNumber: groupNumber},
             (err, attribute) => {
                 if (err) {
                     console.log(err);
-                    return res
-                        .status(500)
-                        .json({success: false, message: err.message});
+                    return res.status(500).json({success: false, message: err.message});
                 }
 
                 if (attribute) {
                     return res.status(400).json({
-                        success: false,
-                        message: 'Attribute ' + attribute.attribute + ' exists.'
+                        success: false, message: 'Attribute ' + attribute.attribute + ' exists.'
                     });
                 } else {
                     let newAttribute = new Attribute({
@@ -72,9 +63,7 @@ module.exports = {
 
     user_add_atts: (req, res) => {
         if (!checkPermission(req)) {
-            return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+            return res.status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
 
         const attributes = req.body.attributes;
@@ -93,9 +82,7 @@ module.exports = {
     },
     user_add_cats: (req, res) => {
         if (!checkPermission(req)) {
-            return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+            return res.status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
 
         const categories = req.body.categories;
@@ -114,9 +101,7 @@ module.exports = {
 
     user_delete_att: (req, res, next) => {
         if (!checkPermission(req)) {
-            return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+            return res.status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
         const attribute = req.body.data;
         const groupNumber = req.session.user.groupNumber;
@@ -154,9 +139,7 @@ module.exports = {
                     err => {
                         if (err) {
                             console.log(err);
-                            return res
-                                .status(500)
-                                .json({success: false, message: err});
+                            return res.status(500).json({success: false, message: err});
                         }
                         return res.json({
                             success: true,
@@ -310,8 +293,7 @@ module.exports = {
     user_delete_cats: (req, res, next) => {
         if (!checkPermission(req)) {
             return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+                .status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
         const groupNumber = req.session.user.groupNumber;
         const ids = req.body.ids;
@@ -349,17 +331,13 @@ module.exports = {
 
     user_add_cat: (req, res, next) => {
         if (!checkPermission(req)) {
-            return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+            return res.status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
 
         const category = req.body.category;
         const groupNumber = req.session.user.groupNumber;
         if (category === '') {
-            return res
-                .status(400)
-                .json({success: false, message: 'Category cannot be empty.'});
+            return res.status(400).json({success: false, message: 'Category cannot be empty.'});
         }
         Category.findOne(
             {category: category, groupNumber: groupNumber},
@@ -611,9 +589,7 @@ module.exports = {
 
     user_delete_attribute: (req, res) => {
         if (
-            !req.session.user.permissions.includes(
-                config.permissions.ATTRIBUTE_CATEGORY_MANAGEMENT
-            )
+            !req.session.user.permissions.includes(config.permissions.ATTRIBUTE_CATEGORY_MANAGEMENT)
         ) {
             return res
                 .status(403)
@@ -634,8 +610,7 @@ module.exports = {
                     ') ' +
                     'does not exist.';
                 return res
-                    .status(400)
-                    .json({success: false, message: messageStr});
+                    .status(400).json({success: false, message: messageStr});
             }
 
             // condition 2: this attribute does not be used in workbook
@@ -670,9 +645,7 @@ module.exports = {
                 // Delete attribute
                 Attribute.deleteOne({_id: attribute._id}, function (err) {
                     if (err) {
-                        return res
-                            .status(500)
-                            .json({success: false, message: err});
+                        return res.status(500).json({success: false, message: err});
                     } else {
                         const messageStr =
                             'Attribute(id:' +
@@ -688,13 +661,9 @@ module.exports = {
 
     user_delete_category: (req, res) => {
         if (
-            !req.session.user.permissions.includes(
-                config.permissions.ATTRIBUTE_CATEGORY_MANAGEMENT
-            )
+            !req.session.user.permissions.includes(config.permissions.ATTRIBUTE_CATEGORY_MANAGEMENT)
         ) {
-            return res
-                .status(403)
-                .json({success: false, message: error.api.NO_PERMISSION});
+            return res.status(403).json({success: false, message: error.api.NO_PERMISSION});
         }
         const queryCategoryId = req.params.categoryId;
 
@@ -710,9 +679,7 @@ module.exports = {
                     queryCategoryId +
                     ') ' +
                     'does not exist.';
-                return res
-                    .status(400)
-                    .json({success: false, message: messageStr});
+                return res.status(400).json({success: false, message: messageStr});
             }
 
             // condition 2: this attribute does not be used in workbook
@@ -747,9 +714,7 @@ module.exports = {
                 // Delete Category
                 Category.deleteOne({_id: category._id}, function (err) {
                     if (err) {
-                        return res
-                            .status(500)
-                            .json({success: false, message: err});
+                        return res.status(500).json({success: false, message: err});
                     } else {
                         const messageStr =
                             'Category(id:' +
