@@ -1,4 +1,5 @@
 const {Organization, OrganizationType} = require('../../models/organization');
+const User = require('../../models/user');
 
 const {checkPermission, Permission, error, removeNil} = require('./helpers');
 
@@ -60,6 +61,13 @@ module.exports = {
                 })
             });
             if (ops.length > 0) await OrganizationType.bulkWrite(ops);
+
+
+            // Update each user's organization
+            //FIXME: one user can join two or more organization, ?
+            await User.update({_id: {'$in': oldDoc.users}}, {'$set': {'organization': null}}, {multi: true});
+            await User.update({_id: {'$in': newDoc.users}}, {'$set': {'organization': newDoc.name}}, {multi: true});
+
             return res.json({message});
         } catch (e) {
             next(e);
@@ -94,7 +102,7 @@ module.exports = {
     },
 
     // Delete an organization for current group
-    OrgAddOneUser: async (req, res, next) => {
+    OrgAddOrSubtractOneUser: async (req, res, next) => {
         if (!checkPermission(req, Permission.SYSTEM_MANAGEMENT)) {
             return next(error.api.NO_PERMISSION);
         }
@@ -102,9 +110,20 @@ module.exports = {
         const {name, userId} = req.params;
         try {
             const doc = await Organization.findOne({name, groupNumber});
-            doc.users.push(userId);
-            await doc.save();
-            return res.json({message: `User added to ${name}`});
+            if (doc) {
+                if (!doc.users.includes(userId) && req.body.validated) {
+                    console.log('add');
+                    doc.users.push(userId);
+                    await doc.save();
+                    return res.json({message: `Add  ${userId} to ${name}`});
+                }
+                if (doc.users.includes(userId) && !req.body.validated) {
+                    console.log('subtract');
+                    doc.users.splice(doc.users.indexOf(userId), 1);
+                    await doc.save();
+                    return res.json({message: `Subtract ${userId} from ${name}`});
+                }
+            }
         } catch (e) {
             next(e);
         }
