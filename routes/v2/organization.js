@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {organizationController} = require('../../controller/v2');
 const {
-    deleteOrganization, updateOrganization, OrgAddOneUser, deleteOrganizationType, updateOrganizationType, getOrganizations,
+    deleteOrganization, updateOrganization,  OrgAddOrSubtractOneUser, deleteOrganizationType, updateOrganizationType, getOrganizations,
     getOrganizationTypes
 } = organizationController;
 
 router.get('/api/v2/organizations/:mode?', getOrganizations);
 
-router.post('/api/v2/organization/:name/:userId', OrgAddOneUser);
+router.post('/api/v2/organization/:name/:userId', OrgAddOrSubtractOneUser);
 
 router.post('/api/v2/organizations', updateOrganization);
 
