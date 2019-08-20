@@ -109,7 +109,7 @@ class Register extends Component {
 
     // local validate
     const username = this.state.username;
-    if (username.length >= 1 && username.length <= 20) {
+    if (username.length >= 1 && username.length <= 50) {
       // validate in back-end
       console.log('checking username');
       checkUsername(username).then((response) => {
