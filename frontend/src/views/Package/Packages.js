@@ -42,8 +42,11 @@ export default function CreatePackage(props) {
       const name = packages[i].name;
       list.push(
         <Grid key={i} item>
-          <PackageCard type="package" fileName={name} deleteCb={params.mode === 'admin' ? openDialog : undefined}
-                       editHref={params.mode === 'admin' ? '/admin/packages/' + name : '/packages/' + name}/>
+          <PackageCard
+            type="package"
+            fileName={name}
+            deleteCb={params.mode === 'admin' ? openDialog : undefined}
+            editHref={params.mode === 'admin' ? '/admin/packages/' + name : '/packages/' + name}/>
         </Grid>
       )
     }
