@@ -63,7 +63,9 @@ export async function switchUserValidate(user, validatedValue) {
   await axios.put(config.server + '/api/users/validated/' + user.username, {validated: validatedValue}, axiosConfig);
   // add this user to the organization when validate is ture
   // subtract this user from the organization when validate is false
-  await axios.post(config.server + '/api/v2/organization/' + user.organization + '/' + user._id, {validated: validatedValue}, axiosConfig);
+  if (user.organization) {
+    await axios.post(config.server + '/api/v2/organization/' + user.organization + '/' + user._id, {validated: validatedValue}, axiosConfig);
+  }
 
 }
 
