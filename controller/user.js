@@ -139,16 +139,18 @@ module.exports = {
             }
 
             if (dbUser) {
-                dbUser.active = updatingActive;
-                dbUser.save((err, updatedUser) => {
-                    if (err) {
-                        return res.status(500).json({success: false, message: err});
-                    }
-                    return res.json({
-                        success: true,
-                        message: updatedUser.username + ' now is ' + updatedUser.active
-                    })
-                });
+                if(dbUser.validated){
+                    dbUser.active = updatingActive;
+                    dbUser.save((err, updatedUser) => {
+                        if (err) {
+                            return res.status(500).json({success: false, message: err});
+                        }
+                        return res.json({
+                            success: true,
+                            message: updatedUser.username + ' now is ' + updatedUser.active
+                        })
+                    });
+                }
 
             } else {
                 return res.status(400).json({success: false, message: updatingUsername + ' does not exist.'});
