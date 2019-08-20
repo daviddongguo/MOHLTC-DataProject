@@ -8,7 +8,6 @@ import {
   switchUserActive
 } from "../../controller/userManager";
 import {FormControl, InputLabel, Select, Input, Checkbox, MenuItem, ListItemText} from "@material-ui/core";
-import {buildErrorParams} from "../../controller/common";
 
 const MaterialTable = React.lazy(() => import('material-table' /* webpackChunkName: "material-table" */));
 
@@ -102,7 +101,7 @@ class Users extends Component {
           getAllUsers()
             .then(users => {
               this.setState({userList: users});
-              this.props.showMessage(username + '\'s active is changed.', 'success');
+              // this.props.showMessage(username + '\'s active is changed.', 'success');
             })
             .catch(err => {
               this.props.showMessage(err.response.data.message, 'error');
@@ -115,14 +114,18 @@ class Users extends Component {
 
   //FIXME: delete this function when developing
   clickValidatedButton = async (user) => {
-    console.table(user);
     try {
       switchUserValidate(user, !user.validated)
         .then((res) => {
           getAllUsers()
             .then(users => {
               this.setState({userList: users});
-              this.props.showMessage(user.username + '\'s validated is changed.', 'success');
+              if (user.organization && !user.validated) {
+                this.props.showMessage(user.username + ' has been added to ' + user.organization, 'success');
+              }
+              if (user.organization && user.validated) {
+                this.props.showMessage(user.username + ' has been subtracted from ' + user.organization, 'warning');
+              }
             })
             .catch(err => {
               this.props.showMessage(err.response.data.message, 'error');
