@@ -12,9 +12,26 @@ import {check, axiosConfig} from "./common";
  * @param published
  * @return {Promise}
  */
-export async function createPackage({name, orgIds, workbookIds, startDate, endDate, adminNotes, published}) {
+export async function createPackage({name, organizationTypes, orgIds, workbookIds, startDate, endDate, adminNotes, published}) {
   const response = await axios.post(config.server + '/api/v2/admin/packages', {
     name,
+    organizationTypes,
+    orgIds,
+    workbookIds,
+    startDate,
+    endDate,
+    adminNotes,
+    published
+  }, axiosConfig);
+  if (check(response)) {
+    return response.data;
+  }
+}
+
+export async function editPackage({name, organizationTypes, orgIds, workbookIds, startDate, endDate, adminNotes, published}) {
+  const response = await axios.put(config.server + '/api/v2/admin/packages', {
+    name,
+    organizationTypes,
     orgIds,
     workbookIds,
     startDate,
