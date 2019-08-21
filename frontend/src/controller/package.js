@@ -27,6 +27,7 @@ export async function createPackage({name, orgIds, workbookIds, startDate, endDa
   }
 }
 
+
 export async function adminGetPackages() {
   const response = await axios.get(config.server + '/api/v2/admin/packages', axiosConfig);
   if (check(response)) {
@@ -35,7 +36,7 @@ export async function adminGetPackages() {
 }
 
 export async function adminGetPackage(packageName) {
-  const response = await axios.get(config.server + '/api/v2/admin/packages/' + packageName, axiosConfig);
+  const response = await axios.get(config.server + '/api/v2/admin/packages/' + encodeURI(packageName), axiosConfig);
   if (check(response)) {
     return response.data.package;
   }
