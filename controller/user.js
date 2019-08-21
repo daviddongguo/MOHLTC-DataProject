@@ -201,10 +201,10 @@ module.exports = {
                 username: req.params.username,
                 groupNumber: req.session.user.groupNumber
             };
-            const update = {validated: req.body.validated};
-            if(!req.body.validated){
-                update.active = false;
-            }
+            const update = {
+                validated: req.body.validated,
+                active: req.body.validated
+            };
             const result = await User.findOneAndUpdate(filter, update, {
                 new: true
             });
