@@ -33,7 +33,7 @@ export default function CreatePackage(props) {
     name: '',
     adminNotes: '',
     startDate: Date.now(),
-    endDate: Date.now(),
+    endDate: new Date(Date.now() + 86400000 * 7),  // one week later
     workbooks: null,
     orgTypes: null,
     originalTypes: null,
@@ -84,6 +84,7 @@ export default function CreatePackage(props) {
         startDate: values.startDate,
         endDate: values.endDate,
         workbookIds: values.selectedWorkbooks,
+        organizationTypes: values.selectedOrgTypes,
         orgIds: [...orgIds],
         adminNotes: values.adminNotes,
         published: values.published,
