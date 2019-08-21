@@ -37,7 +37,7 @@ export default function EditPackage(props) {
     endDate: Date.now(),
     workbooks: null,
     orgTypes: null,
-    originalTypes: null,
+    originalTypes: [],
     selectedWorkbooks: [],
     selectedOrgTypes: [],
     published: false,
@@ -57,7 +57,7 @@ export default function EditPackage(props) {
           orgTypes: null,
           originalTypes: null,
           selectedWorkbooks: null,
-          selectedOrgTypes: null,
+          selectedOrgTypes:  null,
           published: dbPackage.published,
         });
         getAllWorkbooksForAdmin()
@@ -77,8 +77,16 @@ export default function EditPackage(props) {
         getOrganizationTypes()
           .then(data => {
             const types = [];
-            data.forEach(type => types.push([type._id, type.name]));
-            setValues(values => ({...values, orgTypes: types, originalTypes: data}))
+            const selectedOrgTypes = [];
+            data.forEach(type => {
+              types.push([type._id, type.name]);
+              dbPackage.organizationTypes.forEach(typesInPackage => {
+                if (typesInPackage === type._id) {
+                  selectedOrgTypes.push(type._id);
+                }
+              })
+            });
+            setValues(values => ({...values, selectedOrgTypes, orgTypes: types, originalTypes: data}))
           });
       });
 
@@ -99,18 +107,23 @@ export default function EditPackage(props) {
     for (const selectedTypeId of values.selectedOrgTypes) {
       for (const type of values.originalTypes) {
         if (type._id === selectedTypeId) {
-          for (const org of type.organizations) {
-            orgIds.add(org._id);
+          if (type.organizations) {
+            for (const org of type.organizations) {
+              orgIds.add(org._id);
+            }
           }
+
         }
       }
     }
+
     try {
       const data = await editPackage({
         name: values.name,
         startDate: values.startDate,
         endDate: values.endDate,
         workbookIds: values.selectedWorkbooks,
+        organizationTypes: values.selectedOrgTypes,
         orgIds: [...orgIds],
         adminNotes: values.adminNotes,
         published: values.published,
@@ -119,7 +132,6 @@ export default function EditPackage(props) {
     } catch (e) {
       props.showMessage(e.toString() + '\nDetails: ' + e.response.data.message, 'error')
     }
-
   }, [values, props]);
 
   const renderDates = useMemo(() => (<MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -150,11 +162,13 @@ export default function EditPackage(props) {
   const renderDropdown = useMemo(() => (
     <>
       <Dropdown title="Organization Types" options={values.orgTypes}
+                defaultValues={values.selectedOrgTypes}
                 onChange={data => handleChange('selectedOrgTypes', data)}/>
-      <Dropdown title="Workbooks" options={values.workbooks} defaultValues={values.selectedWorkbooks}
+      <Dropdown title="Workbooks" options={values.workbooks}
+                defaultValues={values.selectedWorkbooks}
                 onChange={data => handleChange('selectedWorkbooks', data)}/>
     </>
-  ), [values.orgTypes, values.workbooks, values.selectedWorkbooks, handleChange]);
+  ), [values.selectedOrgTypes, values.orgTypes, values.workbooks, values.selectedWorkbooks, handleChange]);
 
   return (
     <Paper className={classes.container}>
