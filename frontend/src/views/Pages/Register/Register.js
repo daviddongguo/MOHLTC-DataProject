@@ -51,15 +51,17 @@ class Register extends Component {
 
   initialGroups = () => {
     getAllGroups().then((dbGroups) => {
-      const groupNumber = dbGroups[0].groupNumber;
-      getAllOrganizations(groupNumber).then(organizations => {
-        this.setState({
-          groups: dbGroups,
-          groupNumber: dbGroups[0].groupNumber,
-          organizations,
-          organization: organizations[0].name
+      if (dbGroups[0]) {
+        const groupNumber = dbGroups[0].groupNumber;
+        getAllOrganizations(groupNumber).then(organizations => {
+          this.setState({
+            groups: dbGroups,
+            groupNumber: dbGroups[0].groupNumber,
+            organizations,
+            organization: organizations[0].name
+          });
         });
-      });
+      }
     })
   };
 
@@ -385,7 +387,7 @@ class Register extends Component {
 
                     <TextField
                       select
-                      InputLabelProps={{ shrink: true }}
+                      InputLabelProps={{shrink: true}}
                       label="Organization"
                       value={this.state.organization}
                       onChange={this.handleChange('organization')}
