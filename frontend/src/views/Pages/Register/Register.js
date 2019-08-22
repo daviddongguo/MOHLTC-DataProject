@@ -134,7 +134,7 @@ class Register extends Component {
     } else {
       this.setState({
         isUsernameError: true,
-        usernameErrorMessage: 'Username must be 1-20 characters long.',
+        usernameErrorMessage: 'Username must be 1-50 characters long.',
       });
       return false;
     }

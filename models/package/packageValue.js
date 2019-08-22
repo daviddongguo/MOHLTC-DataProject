@@ -5,7 +5,7 @@ const packageValueSchema = new mongoose.Schema({
     groupNumber: {type: Number, required: true},
     package: {type: ObjectId, ref: 'Package', required: true}, // may be not useful
     organization: {type: ObjectId, ref: 'Organization', required: true},
-    values: {}, // {catId: {attId: value}}
+    values: {}, // {orgType: {catId: {attId: value}}}
 
     // User submitted with some notes
     userNotes: String,

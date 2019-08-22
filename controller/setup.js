@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Group = require('../models/group');
+const Organization = require('../models/organization/organization');
 const passport = require('passport');
 const config = require('../config/config'); // get our config file
 const error = require('../config/error');
@@ -11,13 +13,31 @@ function isEmail(email) {
 
 module.exports = {
     // set up
-    setup: () => {
+    setup: async () => {
+        await Organization.find().then( g=>{
+            if(!g){
+                const organization = new Organization({
+                    groupNumber: 1,
+                    name: 'IT Cluster'
+                });
+                organization.save();
+            }
+        });
+        await Group.find().then( g=>{
+            if(!g){
+                const group = new Group({
+                    groupNumber: 1,
+                    name: 'Ontario'
+                });
+                group.save();
+            }
+        });
         User.find({}, 'name', function (err, docs) {
             if (err) {
                 console.log(err);
             }
             config.firstTimeRun = docs.length === 0;
-        })
+        });
     },
 
     firstTimeSetup: (req, res, next) => {
@@ -32,10 +52,10 @@ module.exports = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             organization: req.body.organization,
-            // groupNumber: 1,
-            groupNumber: req.body.groupNumber || 1,
+            groupNumber: req.body.groupNumber,
             phoneNumber: req.body.phoneNumber,
-            validated: req.body.validated || false,
+            active: true,
+            validated: true,
             email: req.body.email,
             permissions: Object.values(config.permissions),   // all permissions
         });
