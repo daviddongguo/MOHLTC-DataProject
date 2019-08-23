@@ -53,7 +53,7 @@ module.exports = {
 
     // no login required, used for registration
     getOrganizationsInGroup: async (req, res, next) => {
-        const groupNumber = req.params.number;
+        const groupNumber = req.params.groupNumber;
         try {
             const organizations = await Organization.find({groupNumber}, 'name managers types');
             return res.json({organizations});

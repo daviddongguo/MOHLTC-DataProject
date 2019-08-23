@@ -33,7 +33,7 @@ export async function getAllGroups() {
 }
 
 export async function getAllOrganizations(groupNumber) {
-  const urlStr = config.server + '/api/v2/groups/' + groupNumber;
+  const urlStr = config.server + '/api/v2/organizations/' + groupNumber;
   const result = await axios.get(urlStr);
   return result.data.organizations;
 }
@@ -70,7 +70,7 @@ export async function switchUserValidate(user, validatedValue) {
       const resOrganization  = await axios.post(config.server + '/api/v2/organization/' + user.organization + '/' + user._id, {validated: validatedValue}, axiosConfig);
       result.push(resOrganization);
       return result;
-    }    
+    }
   }catch (e) {
     return e;
   }

@@ -13,7 +13,7 @@ passport.use(new LdapStrategy(config.OPTS));
 // registrations related
 router.get('/api/v2/groups', groupController.getGroups);
 router.post('/api/v2/groups', groupController.createGroup);
-router.get('/api/v2/groups/:number', groupController.getOrganizationsInGroup);
+router.get('/api/v2/organizations/:groupNumber', groupController.getOrganizationsInGroup);
 
 router.get('/api/check/email/:email', user_controller.check_email);
 router.get('/api/check/username/:username', user_controller.check_username);
