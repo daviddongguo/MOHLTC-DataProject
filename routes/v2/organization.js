@@ -6,7 +6,7 @@ const {
     getOrganizationTypes
 } = organizationController;
 
-router.get('/api/v2/organizations/:mode?', getOrganizations);
+// router.get('/api/v2/organizations/:mode?', getOrganizations);
 
 router.post('/api/v2/organization/:name/:userId', OrgAddOrSubtractOneUser);
 

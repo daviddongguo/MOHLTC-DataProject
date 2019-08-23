@@ -5,23 +5,23 @@ const {checkPermission, Permission, error, removeNil} = require('./helpers');
 
 
 module.exports = {
-    getOrganizations: async (req, res, next) => {
-        if (!checkPermission(req, Permission.SYSTEM_MANAGEMENT)) {
-            return next(error.api.NO_PERMISSION);
-        }
-        const groupNumber = req.session.user.groupNumber;
-        try {
-            let organizations;
-            if (req.params.mode === 'simplified') {
-                organizations = await Organization.find({groupNumber}, 'name')
-            } else {
-                organizations = await Organization.find({groupNumber}).populate('users managers types');
-            }
-            return res.json({organizations});
-        } catch (e) {
-            next(e);
-        }
-    },
+    // getOrganizations: async (req, res, next) => {
+    //     if (!checkPermission(req, Permission.SYSTEM_MANAGEMENT)) {
+    //         return next(error.api.NO_PERMISSION);
+    //     }
+    //     const groupNumber = req.session.user.groupNumber;
+    //     try {
+    //         let organizations;
+    //         if (req.params.mode === 'simplified') {
+    //             organizations = await Organization.find({groupNumber}, 'name')
+    //         } else {
+    //             organizations = await Organization.find({groupNumber}).populate('users managers types');
+    //         }
+    //         return res.json({organizations});
+    //     } catch (e) {
+    //         next(e);
+    //     }
+    // },
 
     // Add or update an organization for current group
     updateOrganization: async (req, res, next) => {
@@ -111,18 +111,19 @@ module.exports = {
         try {
             const doc = await Organization.findOne({name, groupNumber});
             if (doc) {
-                if (!doc.users.includes(userId) && req.body.validated) {
+                if (!doc.users.includes(userId) && req.body.validated) { // validated: true
                     console.log('add');
                     doc.users.push(userId);
                     await doc.save();
                     return res.json({message: `Add  ${userId} to ${name}`});
                 }
-                if (doc.users.includes(userId) && !req.body.validated) {
+                if (doc.users.includes(userId) && !req.body.validated) { // validated: false
                     console.log('subtract');
                     doc.users.splice(doc.users.indexOf(userId), 1);
                     await doc.save();
                     return res.json({message: `Subtract ${userId} from ${name}`});
                 }
+                return res.json({message: `organization did not modify.`});
             }
         } catch (e) {
             next(e);

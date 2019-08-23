@@ -57,7 +57,7 @@ module.exports = {
             if (user) {
                 return res.json({message: email + ' already in use.'});
             }
-            return res.json();
+            return res.json({message: ''});
         });
     },
 
@@ -67,7 +67,7 @@ module.exports = {
             if (user) {
                 return res.json({message: username + ' already in use.'});
             }
-            return res.json();
+            return res.json({message: ''});
         });
     },
 
@@ -145,10 +145,7 @@ module.exports = {
                         if (err) {
                             return res.status(500).json({success: false, message: err});
                         }
-                        return res.json({
-                            success: true,
-                            message: updatedUser.username + ' now is ' + updatedUser.active
-                        })
+                        return res.status(200).json({success: true, message: 'updated!', user: dbUser});
                     });
                 }
 

@@ -27,10 +27,11 @@ class Register extends Component {
       password: '',
       repeatPassword: '',
       phoneNumber: "",
-      groupNumber: 1,
-      groups: [],
-      organization: null,
-      organizations: [],
+      selectedGroupNumber: 1,
+      dbGroups: [],
+      selectedOrganization: null,
+      dbOrganizations: [],
+      selectedOrganizations: [],
 
       isServerErrormessage: false,
       ServerErrormessage: null,
@@ -52,13 +53,13 @@ class Register extends Component {
   initialGroups = () => {
     getAllGroups().then((dbGroups) => {
       if (dbGroups[0]) {
-        const groupNumber = dbGroups[0].groupNumber;
-        getAllOrganizations(groupNumber).then(organizations => {
+        getAllOrganizations().then(dbOrganizations => {
           this.setState({
-            groups: dbGroups,
-            groupNumber: dbGroups[0].groupNumber,
-            organizations,
-            organization: organizations[0].name
+            dbGroups,
+            selectedGroupNumber: dbGroups[0].groupNumber,
+            dbOrganizations,
+            selectedOrganizations: dbOrganizations,
+            selectedOrganization: dbOrganizations[0].name
           });
         });
       }
@@ -68,7 +69,7 @@ class Register extends Component {
   handleSubmit = event => {
     event.preventDefault();
     signUpLocal(this.setup, this.state.username, this.state.password,
-      this.state.firstName, this.state.lastName, this.state.organization, this.state.email, this.state.phoneNumber, this.state.groupNumber)
+      this.state.firstName, this.state.lastName, this.state.selectedOrganization, this.state.email, this.state.phoneNumber, this.state.selectedGroupNumber)
       .then(response => {
         this.props.history.push(response.data.redirect);
       })
@@ -208,7 +209,7 @@ class Register extends Component {
   };
 
   validateGroupNumber = () => {
-    if (this.state.groupNumber >= 1) {
+    if (this.state.selectedGroupNumber >= 1) {
       this.setState({
         isGroupNumberError: false,
         groupNumberErrorMessage: '',
@@ -264,13 +265,18 @@ class Register extends Component {
         repeatPasswordErrorMessage: '',
       });
     } else if (name === 'groupNumber') {
-      getAllOrganizations(value).then(organizations => {
-        this.setState({
-          organizations,
-          organization: organizations[0].name,
-          isGroupNumberError: false,
-          groupNumberErrorMessage: '',
-        });
+      // FIXME: use local data instead of remote data
+      let selectedOrganizations = [];
+      this.state.dbOrganizations.forEach( o => {
+        if(o.groupNumber === value){
+          selectedOrganizations.push(o);
+        }
+      });
+      this.setState({
+        selectedOrganizations,
+        selectedOrganization: selectedOrganizations[0].name,
+        isGroupNumberError: false,
+        groupNumberErrorMessage: '',
       });
     }
   };
@@ -373,12 +379,12 @@ class Register extends Component {
                     <TextField
                       select
                       label="Group Name"
-                      value={this.state.groupNumber}
+                      value={this.state.selectedGroupNumber}
                       onChange={this.handleChange('groupNumber')}
                       margin="normal"
                       fullWidth
                     >
-                      {this.state.groups.map(option => (
+                      {this.state.dbGroups.map(option => (
                         <MenuItem key={option.groupNumber} value={option.groupNumber}>
                           {option.name}
                         </MenuItem>
@@ -389,12 +395,12 @@ class Register extends Component {
                       select
                       InputLabelProps={{shrink: true}}
                       label="Organization"
-                      value={this.state.organization}
+                      value={this.state.selectedOrganization}
                       onChange={this.handleChange('organization')}
                       margin="normal"
                       fullWidth
                     >
-                      {this.state.organizations.map(option => (
+                      {this.state.selectedOrganizations.map(option => (
                         <MenuItem key={option._id} value={option.name}>
                           {option.name}
                         </MenuItem>

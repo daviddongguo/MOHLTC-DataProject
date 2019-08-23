@@ -10,13 +10,19 @@ let router = express.Router();
 
 passport.use(new LdapStrategy(config.OPTS));
 
-// registrations related
+// used in register page
 router.get('/api/v2/groups', groupController.getGroups);
-router.post('/api/v2/groups', groupController.createGroup);
-router.get('/api/v2/organizations/:groupNumber', groupController.getOrganizationsInGroup);
-
+router.get('/api/v2/organizations', groupController.getOrganizations);
 router.get('/api/check/email/:email', user_controller.check_email);
 router.get('/api/check/username/:username', user_controller.check_username);
+
+// POST request for user sign up locally
+router.post('/api/signup/local', registration_local_controller.user_sign_up_local);
+
+
+router.post('/api/v2/groups', groupController.createGroup);
+
+
 // Query the current user logged in.
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
 
@@ -31,8 +37,7 @@ router.get('/api/organization_details', user_controller.getOrganizationDetails);
 
 // POST request for user sign up from ldap server
 router.post('/api/signup', registration_ldap_controller.user_ldap_signup);
-// POST request for user sign up locally
-router.post('/api/signup/local', registration_local_controller.user_sign_up_local);
+
 
 // POST request for user sign in
 router.post('/api/login/local', user_controller.user_log_in);

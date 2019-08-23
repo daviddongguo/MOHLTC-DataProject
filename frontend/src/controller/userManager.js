@@ -33,7 +33,10 @@ export async function getAllGroups() {
 }
 
 export async function getAllOrganizations(groupNumber) {
-  const urlStr = config.server + '/api/v2/organizations/' + groupNumber;
+  let urlStr = config.server + '/api/v2/organizations';
+  if(groupNumber){
+    urlStr += '?groupNumber=' + groupNumber;
+  }
   const result = await axios.get(urlStr);
   return result.data.organizations;
 }
@@ -105,28 +108,28 @@ export async function loginLocal(username, password) {
 }
 
 /**
- * This will also sign in the created user
- * @param setup - is this called for system setup
+ *
+ * @param setup
  * @param username
+ * @param password
  * @param firstName
  * @param lastName
- * @param organization
+ * @param selectedOrganization
  * @param email
- * @param password
  * @param phoneNumber
- * @param groupNumber
- * @returns {Promise}
+ * @param selectedGroupNumber
+ * @returns {Promise<AxiosResponse<T>>}
  */
-export async function signUpLocal(setup, username, password, firstName, lastName, organization, email, phoneNumber, groupNumber) {
+export async function signUpLocal(setup, username, password, firstName, lastName, selectedOrganization, email, phoneNumber, selectedGroupNumber) {
   return await axios.post(config.server + (setup ? '/api/setup' : '/api/signup/local'), {
     username: username,
     password: password,
     firstName: firstName,
     lastName: lastName,
-    organization: organization,
     email: email,
     phoneNumber: phoneNumber,
-    groupNumber: groupNumber
+    groupNumber: selectedGroupNumber,
+    organization: selectedOrganization
   }, axiosConfig);
 }
 
