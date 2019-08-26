@@ -123,7 +123,7 @@ module.exports = {
                     await doc.save();
                     return res.json({message: `Subtract ${userId} from ${name}`});
                 }
-                return res.json({message: `organization did not modify.`});
+                return res.status(204).json();
             }
         } catch (e) {
             next(e);
