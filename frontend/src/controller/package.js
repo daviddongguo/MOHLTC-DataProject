@@ -27,6 +27,9 @@ export async function createPackage({name, orgIds, workbookIds, startDate, endDa
   }
 }
 
+export async function userSubmitPackage() {
+}
+
 export async function adminGetPackages() {
   const response = await axios.get(config.server + '/api/v2/admin/packages', axiosConfig);
   if (check(response)) {
