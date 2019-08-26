@@ -42,17 +42,21 @@ module.exports = {
     },
 
     createGroup: async (req, res, next) => {
-        let {groupNumber, name} = req.body;
-        if (!groupNumber) {
+        let {groupNumber, name} =req.body;
+        if(!groupNumber){
             groupNumber = req.session.user.groupNumber;
         }
         const query = {groupNumber, name};
         try {
-            const group = new Group({groupNumber, name});
-            const result = await group.save();
-            return res.json({result})
+            const dbGroup = await Group.findOne(query);
+            if(dbGroup){
+                return res.status(400).json({success: false, message: `${name} already has been used.`});
+            }
+            const group = new Group(query);
+            const result = await  group.save();
+            return res.json({success: true, message: `${name} added.`, group: result})
         } catch (e) {
-            return res.status(500).json({e});
+            return res.status(500).json({success: false, message: e});
         }
     },
 
@@ -61,10 +65,10 @@ module.exports = {
         const groupNumber = req.query.groupNumber;
         try {
             let organizations;
-            if (groupNumber) {
-                organizations = await Organization.find({groupNumber},);
-            } else {
-                organizations = await Organization.find();
+            if(groupNumber){
+                organizations = await Organization.find({groupNumber}, );
+            }else{
+                organizations = await Organization.find( );
             }
             return res.json({organizations});
         } catch (e) {
