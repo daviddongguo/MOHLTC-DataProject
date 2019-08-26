@@ -42,13 +42,17 @@ module.exports = {
     },
 
     createGroup: async (req, res, next) => {
-        const {groupNumber, name} =req.body;
+        let {groupNumber, name} = req.body;
+        if (!groupNumber) {
+            groupNumber = req.session.user.groupNumber;
+        }
+        const query = {groupNumber, name};
         try {
             const group = new Group({groupNumber, name});
-            const result = await  group.save();
+            const result = await group.save();
             return res.json({result})
         } catch (e) {
-            next(e);
+            return res.status(500).json({e});
         }
     },
 
@@ -57,10 +61,10 @@ module.exports = {
         const groupNumber = req.query.groupNumber;
         try {
             let organizations;
-            if(groupNumber){
-                organizations = await Organization.find({groupNumber}, );
-            }else{
-                organizations = await Organization.find( );
+            if (groupNumber) {
+                organizations = await Organization.find({groupNumber},);
+            } else {
+                organizations = await Organization.find();
             }
             return res.json({organizations});
         } catch (e) {
