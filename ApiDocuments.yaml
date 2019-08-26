@@ -1,0 +1,559 @@
+openapi: 3.0.1
+info:
+  title: MOHLTC-DataProject
+  description:  Restful APIs for MOHLTC-DataProject, mainly includes users management, data package management, and the manipulations related to the templates and the values of workbooks.
+  version: '0.1'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  # Register
+  /api/isloggedin:
+    get:
+      description: Returns the true if the user is authenticated, otherwise false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/check/email/{email}:
+    get:
+      description: Returns warning message if the checking email exists in the database, otherwise return nothing
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: the email that will be checked
+      responses:
+        '200':
+          description: Found the repeated email on the database
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '204':
+          description: No the identical email on the database.
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/check/username/{username}:
+    get:
+      description: Returns warning message if the checking usename exists in the database, otherwise return nothing
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: the username that will be checked
+      responses:
+        '200':
+          description: Found the repeated user name on the database
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '204':
+          description: No the identical user name on the database.
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/groups:
+    get:
+      description: Returns all the groups information including group number and name
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  # /api/v2/organizations:
+  /api/signup/local:
+    post:
+      description: Returns redirect Url string and write this user into session if all the inputs are correct otherwise returns an error message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                password:
+                  type: string
+                phoneNumber:
+                  type: string
+                organization:
+                  type: string
+                groupNumber:
+                  type: integer
+                email:
+                  type: string
+                username:
+                  type: string
+            examples:
+              '0':
+                value: >-
+                  {"username":"one111","password":"1","firstName":"one","lastName":"one","email":"one111@ontario.ca","phoneNumber":"1","groupNumber":1,"organization":"MOH-group1"}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Failed operation, and Returns the error
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+
+  # Login
+  /api/login/local:
+    post:
+      description: Returns redirect Url string and write the login user into session if the username and password are correct otherwise returns an error message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                username:
+                  type: string
+            examples:
+              '0':
+                value: '{"username":"test","password":"test"}'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Login failed
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+
+  # Management
+  /api/profile:
+    get:
+      description: Returns the current login user's information
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/permissions:
+    get:
+      description: Returns the available permissions of the current user
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/user/permission:
+    post:
+      description: Update the user's permission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                permissions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+                      active:
+                        type: boolean
+                      username:
+                        type: string
+            examples:
+              '0':
+                value: >-
+                  {"permissions":[{"username":"manage of King
+                  Hospital","permissions":["create-delete-attribute-category"],"active":true}]}
+      responses:
+        '200':
+          description: Updated successful
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/user/details:
+    get:
+      description: Returns all the users on the database
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/users/validated/{username}:
+    put:
+      description: The validated and active both will be false if the requested validated is false; both will be true if true.
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: the name of the user that you want to modify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                validated:
+                  type: boolean
+            examples:
+              '0':
+                value: |-
+                  {
+                      "validated": true
+                  }
+      responses:
+        '200':
+          description: Updated successful
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Wrong parameters, user name or validated value is empty, the user name is the current user
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/users/active/{username}:
+    put:
+      description: Set the active status of the user based on the value you passed.
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: the name of the user that you want to modify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                active:
+                  type: boolean
+            examples:
+              '0':
+                value: |-
+                  {
+                      "active": true
+                  }
+      responses:
+        '200':
+          description: Updated successful
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Wrong parameters, user name or active value is empty, the user name is the current user
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '401':
+          description: unvalidated user can not modify the active status
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+
+  # Oragnization
+  /api/v2/organization/{groupname}/{userid}:
+    post:
+      description: Add one user into one organization when the passed validated is true, otherwise subtract
+      parameters:
+        - name: groupname
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'MOH-group1'
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '5d602d87efe8603c346ddd54'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                validated:
+                  type: boolean
+            examples:
+              '0':
+                value: '{"validated":true}'
+              '1':
+                value: '{"validated":false}'
+      responses:
+        '200':
+          description: Updated successful
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '204':
+          description: Nothing happened, for the updating value equals the value on the database
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/orgtypes:
+    get:
+      description: Returns all organizations on the database
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+    post:
+      description: Creates or Update one organization type that can have one or more oranizations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                organizations:
+                  type: array
+                  items:
+                    type: string
+            examples:
+              '0':
+                value: >-
+                  {"name":"OrganizationTypeWillBeDeleted"}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Failed operation, and Returns the error message
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/orgtypes/{name}:
+    delete:
+      description: Delete the organization type
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'OrganizationTypeWillBeDeleted'
+      responses:
+        '200':
+          description: successful deleted
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/organizations:
+    get:
+      description: Returns all the organizations whose group is the same as the queried group
+      parameters:
+        - name: groupNumber
+          in: query
+          schema:
+            type: string
+          example: '1'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+    post:
+      description: Add or update an organization for current group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                types:
+                  type: array
+                  items:
+                    type: string
+                name:
+                  type: string
+                users:
+                  type: array
+                  items:
+                    type: string
+                managers:
+                  type: array
+                  items:
+                    type: string
+            examples:
+              '0':
+                value: >-
+                  {"name":"OrganizationWillBeDeleted","users":["5d5eafbcc3b85c1c5cc81dc8"],"managers":["5d5eafbcc3b85c1c5cc81dc8"],"types":["5d603977d7ac99d4a4f4d0ce"]}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/organizations/{organizationName}:
+    delete:
+      description: Delete one organization based on it's name
+      parameters:
+        - name: organizationName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'OrganizationWillBeDeleted'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
