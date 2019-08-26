@@ -55,9 +55,9 @@ module.exports = {
         const email = req.params.email;
         User.findOne({email: email}, (err, user) => {
             if (user) {
-                return res.json({message: email + ' already in use.'});
+                return res.status(200).json({message: email + ' already in use.'});
             }
-            return res.json({message: ''});
+            return res.status(204).json();
         });
     },
 
@@ -65,12 +65,11 @@ module.exports = {
         const username = req.params.username;
         getUser(username, (err, user) => {
             if (user) {
-                return res.json({message: username + ' already in use.'});
+                return res.status(200).json({message: username + ' already in use.'});
             }
-            return res.json({message: ''});
+            return res.status(204).json();
         });
     },
-
 
     get_profile: (req, res, next) => {
         const username = req.session.user.username;
@@ -187,8 +186,11 @@ module.exports = {
         if (!req.session.user.permissions.includes(config.permissions.USER_MANAGEMENT)) {
             return res.status(403).json({success: false, message: error.api.NO_PERMISSION})
         }
-        if (!req.params.username && req.body.validated) {
-            return res.status(400).json({success: false, message: 'user name and validated value can not be empty!'})
+        if (!req.params.username) {
+            return res.status(400).json({success: false, message: 'user name can not be empty!'})
+        }
+        if (req.body.validated === undefined) {
+            return res.status(400).json({success: false, message: 'validated value can not be empty!'})
         }
         if (req.params.username === req.session.user.username) {
             return res.status(400).json({success: false, message: 'Can not set the active value by yourself'});
