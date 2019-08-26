@@ -10,6 +10,8 @@ paths:
   /api/isloggedin:
     get:
       description: Returns the true if the user is authenticated, otherwise false
+      tags:
+        - register
       responses:
         '200':
           description: successful operation
@@ -25,6 +27,8 @@ paths:
   /api/check/email/{email}:
     get:
       description: Returns warning message if the checking email exists in the database, otherwise return nothing
+      tags:
+        - register
       parameters:
         - in: path
           name: email
@@ -54,6 +58,8 @@ paths:
   /api/check/username/{username}:
     get:
       description: Returns warning message if the checking usename exists in the database, otherwise return nothing
+      tags:
+        - register
       parameters:
         - in: path
           name: username
@@ -80,25 +86,13 @@ paths:
         - url: 'http://localhost:3000'
     servers:
       - url: 'http://localhost:3000'
-  /api/v2/groups:
-    get:
-      description: Returns all the groups information including group number and name
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json; charset=utf-8:
-              schema:
-                type: string
-              examples: {}
-      servers:
-        - url: 'http://localhost:3000'
-    servers:
-      - url: 'http://localhost:3000'
+  # /api/v2/groups:
   # /api/v2/organizations:
   /api/signup/local:
     post:
       description: Returns redirect Url string and write this user into session if all the inputs are correct otherwise returns an error message
+      tags:
+        - register
       requestBody:
         content:
           application/json:
@@ -149,6 +143,8 @@ paths:
   /api/login/local:
     post:
       description: Returns redirect Url string and write the login user into session if the username and password are correct otherwise returns an error message
+      tags:
+        - login
       requestBody:
         content:
           application/json:
@@ -186,6 +182,8 @@ paths:
   /api/profile:
     get:
       description: Returns the current login user's information
+      tags:
+        - user management
       responses:
         '200':
           description: successful operation
@@ -201,6 +199,8 @@ paths:
   /api/permissions:
     get:
       description: Returns the available permissions of the current user
+      tags:
+        - user management
       responses:
         '200':
           description: successful operation
@@ -216,6 +216,8 @@ paths:
   /api/user/permission:
     post:
       description: Update the user's permission
+      tags:
+        - user management
       requestBody:
         content:
           application/json:
@@ -255,6 +257,8 @@ paths:
   /api/user/details:
     get:
       description: Returns all the users on the database
+      tags:
+        - user management
       responses:
         '200':
           description: successful operation
@@ -270,6 +274,8 @@ paths:
   /api/users/validated/{username}:
     put:
       description: The validated and active both will be false if the requested validated is false; both will be true if true.
+      tags:
+        - user management
       parameters:
         - in: path
           name: username
@@ -313,6 +319,8 @@ paths:
   /api/users/active/{username}:
     put:
       description: Set the active status of the user based on the value you passed.
+      tags:
+        - user management
       parameters:
         - in: path
           name: username
@@ -365,6 +373,8 @@ paths:
   /api/v2/organization/{groupname}/{userid}:
     post:
       description: Add one user into one organization when the passed validated is true, otherwise subtract
+      tags:
+        - Oragnization
       parameters:
         - name: groupname
           in: path
@@ -413,6 +423,8 @@ paths:
   /api/v2/orgtypes:
     get:
       description: Returns all organizations on the database
+      tags:
+        - Oragnization
       responses:
         '200':
           description: successful operation
@@ -423,6 +435,8 @@ paths:
               examples: {}
     post:
       description: Creates or Update one organization type that can have one or more oranizations
+      tags:
+        - Oragnization
       requestBody:
         content:
           application/json:
@@ -461,6 +475,8 @@ paths:
   /api/v2/orgtypes/{name}:
     delete:
       description: Delete the organization type
+      tags:
+        - Oragnization
       parameters:
         - name: name
           in: path
@@ -483,6 +499,8 @@ paths:
   /api/v2/organizations:
     get:
       description: Returns all the organizations whose group is the same as the queried group
+      tags:
+        - Oragnization
       parameters:
         - name: groupNumber
           in: query
@@ -499,6 +517,8 @@ paths:
               examples: {}
     post:
       description: Add or update an organization for current group
+      tags:
+        - Oragnization
       requestBody:
         content:
           application/json:
@@ -538,6 +558,8 @@ paths:
   /api/v2/organizations/{organizationName}:
     delete:
       description: Delete one organization based on it's name
+      tags:
+        - Oragnization
       parameters:
         - name: organizationName
           in: path
@@ -548,6 +570,162 @@ paths:
       responses:
         '200':
           description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/groups:
+    get:
+      description: Returns all the groups information including group number and name
+      tags:
+        - Group
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+    post:
+      description: Create one group
+      tags:
+        - Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+            examples:
+              '0':
+                value: '{"name":"group 104"}'
+      responses:
+        '200':
+          description: Created successful
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '400':
+          description: Failed, maybe the name has been used.
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+
+  # Package
+  /api/v2/admin/packages:
+    get:
+      description: Returns all packages on the database
+      tags:
+        - Package
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    post:
+      description: Create one pakcage
+      tags:
+        - Package
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organizationTypes:
+                  type: array
+                  items:
+                    type: string
+                adminNotes:
+                  type: string
+                workbooks:
+                  type: array
+                  items:
+                    type: string
+                endDate:
+                  type: string
+                adminFiles:
+                  type: array
+                  items:
+                    type: string
+                organizations:
+                  type: array
+                  items:
+                    type: string
+                name:
+                  type: string
+                published:
+                  type: boolean
+                groupNumber:
+                  type: integer
+                startDate:
+                  type: string
+            examples:
+              '0':
+                value: |-
+                  {
+                              "published": true,
+                              "organizations": [],
+                              "organizationTypes": [],
+                              "workbooks": [
+                                  "5d5eb072d7ac99d4a4f473b8",
+                                  "5d5eb0b8d7ac99d4a4f473f0"
+                              ],
+                              "name": "packageWillBeDeleted",
+                              "startDate": "2019-08-22T15:12:31.541Z",
+                              "endDate": "2019-08-29T15:12:31.541Z",
+                              "adminNotes": "with two workbooks",
+                              "adminFiles": [],
+                              "groupNumber": 1
+                  }
+      responses:
+        '200':
+          description: Created successfully
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/admin/packages/{packageName}:
+    delete:
+      description: Auto generated using Swagger Inspector
+      tags:
+        - Package
+      parameters:
+        - name: packageName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'packageWillBeDeleted'
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
           content:
             application/json; charset=utf-8:
               schema:

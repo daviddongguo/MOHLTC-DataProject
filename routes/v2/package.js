@@ -9,6 +9,7 @@ const {
 
 router.get('/api/v2/admin/packages', adminGetAllPackages);
 router.post('/api/v2/admin/packages', adminCreatePackage);
+// FIXME: need organization name to pass
 router.get('/api/v2/admin/packages/:name', adminGetPackage);
 router.delete('/api/v2/admin/packages/:name', adminDeletePackage);
 
