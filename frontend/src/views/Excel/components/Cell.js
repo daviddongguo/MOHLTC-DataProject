@@ -2,11 +2,32 @@ import React, {PureComponent} from "react";
 import {colorToRgb, RichText, SSF} from "../utils";
 import ac from "xlsx-populate/lib/addressConverter";
 import Worksheets from "./Sheets";
+import {withStyles} from "@material-ui/core";
 
-const borderStyle2Width = {thin: 1, medium: 2, thick: 3};
+const styles = {
+  cellDefault: {
+    borderRight: '1px solid #ccc',
+    borderBottom: '1px solid #ccc',
+    padding: '0 4px 0 4px',
+    lineHeight: 'normal',
+    textAlign: 'left',
+    whiteSpace: 'pre',
+    overflow: 'visible',
+  },
+  notSelectable: {
+    '-webkit-user-select': 'none',
+    '-khtml-user-select': 'none',
+    '-moz-user-select': 'none',
+    '-ms-user-select': 'none',
+    '-o-user-select': 'none',
+    'user-select': 'none',
+  }
+};
+
+const borderStyle2Width = {thin: 1, medium: 1.5, thick: 2.5};
 
 const supported = {
-  horizontalAlignment: {left: 'start', right: 'end', center: 'center', justify: 'safe'},
+  horizontalAlignment: {left: 'left', right: 'right', center: 'center', justify: 'justify'},
   verticalAlignment: {
     top: 'start',
     center: 'center',
@@ -22,7 +43,6 @@ const defaultStyle = {
   textAlign: 'left',
   whiteSpace: 'pre',
   overflow: 'visible',
-  display: 'flex',
 };
 
 let excel;
@@ -37,29 +57,21 @@ class Cell extends PureComponent {
   static rowHeaders = [];
   static colHeaders = [];
 
-  /**
-   * @param {Cell} cell
-   */
-  static getCellStyles(cell) {
-    const sheet = cell.sheet();
-    let style = {};
-    let rowHeight = cell.row().height;
-    rowHeight = rowHeight ? 24 : rowHeight / 0.6;
-
-    const hideGridLines = !sheet.gridLinesVisible();
-    if (hideGridLines) {
-      style.borderRight = null;
-      style.borderBottom = null;
-    }
+  static getFontStyles(cell, rowHeight, style = {}) {
     if (cell.getStyle('bold')) {
       style.fontWeight = 'bold';
     }
     if (cell.getStyle('italic')) {
       style.fontStyle = 'italic';
     }
-    if (cell.getStyle('underline')) {
-      style.textDecoration = 'underline';
+    const underline = cell.getStyle('underline');
+    if (underline) {
+      style.textDecorationLine = 'underline';
+      if (underline === 'double') {
+        style.textDecorationStyle = 'double';
+      }
     }
+
     if (cell.getStyle('strikethrough')) {
       if (style.textDecoration)
         style.textDecoration += ' line-through';
@@ -81,6 +93,32 @@ class Cell extends PureComponent {
     if (fontColor) {
       style.color = '#' + colorToRgb(fontColor);
     }
+    const superscript = cell.getStyle('superscript');
+    if (superscript) {
+      style.verticalAlign = 'super';
+    }
+    const subscript = cell.getStyle('subscript');
+    if (subscript) {
+      style.verticalAlign = 'sub';
+    }
+    return style;
+  }
+
+  /**
+   * @param {Cell} cell
+   */
+  static getCellStyles(cell) {
+    const sheet = cell.sheet();
+    let style = {};
+    let rowHeight = cell.row().height;
+    rowHeight = rowHeight ? 24 : rowHeight / 0.6;
+
+    const hideGridLines = !sheet.gridLinesVisible();
+    if (hideGridLines) {
+      style.borderRight = 'initial';
+      style.borderBottom = 'initial';
+    }
+    Cell.getFontStyles(cell, rowHeight, style);
     const fill = cell.getStyle('fill');
     if (fill) {
       if (fill.type === 'solid') {
@@ -107,8 +145,12 @@ class Cell extends PureComponent {
     }
 
     // right and bottom borders
-    const rightBorder = cell.getStyle('rightBorder');
-    const bottomBorder = cell.getStyle('bottomBorder');
+    const merged = cell.merged();
+    let bottomRightCell;
+    if (merged) bottomRightCell = sheet.getCell(merged.to.row, merged.to.col);
+
+    const rightBorder = cell.getStyle('rightBorder') || (bottomRightCell ? bottomRightCell.getStyle('rightBorder') : undefined);
+    const bottomBorder = cell.getStyle('bottomBorder') || (bottomRightCell ? bottomRightCell.getStyle('bottomBorder') : undefined);
     if (rightBorder) {
       const color = colorToRgb(rightBorder.color) || '000';
       style.borderRight = `${borderStyle2Width[rightBorder.style]}px solid #${color}`;
@@ -121,10 +163,10 @@ class Cell extends PureComponent {
     // horizontalAlignment
     const horizontalAlignment = supported.horizontalAlignment[cell.getStyle('horizontalAlignment')];
     if (horizontalAlignment) {
-      style.justifyContent = horizontalAlignment;
+      style.textAlign = horizontalAlignment;
     } else {
       // default
-      style.justifyContent = 'left';
+      style.textAlign = 'left';
     }
 
     // verticalAlignment
@@ -148,7 +190,7 @@ class Cell extends PureComponent {
     // }
 
     // merged cell
-    const merged = cell.merged();
+    // const merged = cell.merged();
     if (merged) {
       // show the primary cell
       if (merged.from.row === cell.rowNumber() && merged.from.col === cell.columnNumber()) {
@@ -176,30 +218,34 @@ class Cell extends PureComponent {
    */
   static getCellValueAndStyle(cell, initStyle) {
     let value = cell.getValue();
+    const isRichText = value instanceof RichText;
     if (value != null) {
       if (value.error) {
         value = value.error();
-      } else if (value instanceof RichText) {
-        value = value.text();
       }
     }
     if (value == null) value = '';
     const numFmt = cell.getStyle('numberFormat');
-    if (numFmt !== null && numFmt !== undefined) {
+    if (!isRichText && numFmt !== null && numFmt !== undefined) {
       value = SSF.format(numFmt.replace('\\', ''), value);
     }
     // do not render the cell if the cell's row or column is hidden
     let mergedStyle;
     if (initStyle.width === 0 || initStyle.height === 0) {
       value = null;
+      const hideGridLines = !cell.sheet().gridLinesVisible();
       mergedStyle = Object.assign({}, initStyle);
+      if (hideGridLines) {
+        mergedStyle.borderRight = 'initial';
+        mergedStyle.borderBottom = 'initial';
+      }
     } else {
-      mergedStyle = Object.assign({}, defaultStyle, initStyle, Cell.getCellStyles(cell));
+      mergedStyle = Object.assign({}, initStyle, Cell.getCellStyles(cell));
     }
-    // text overflow
-    if (value != null && value !== '') {
-      mergedStyle.zIndex = cell.columnNumber();
-    }
+    // // text overflow
+    // if (value != null && value !== '') {
+    //   mergedStyle.zIndex = cell.columnNumber();
+    // }
     return {mergedStyle, value};
   }
 
@@ -274,6 +320,19 @@ class Cell extends PureComponent {
     )
   }
 
+  renderRichText(cell, value, mergedStyle) {
+    const rt = [];
+    let rowHeight = cell.row().height;
+    rowHeight = rowHeight ? 24 : rowHeight / 0.6;
+    mergedStyle.textDecoration = undefined;
+    for (let i = 0; i < value.length; i++) {
+      const fragment = value.get(i);
+      const style = Cell.getFontStyles(fragment, rowHeight);
+      rt.push(<span key={i} style={style}>{fragment.getValue()}</span>)
+    }
+    return rt;
+  }
+
   renderNormalCell(value) {
     return (
       <span style={{pointerEvents: 'none'}}>
@@ -283,7 +342,7 @@ class Cell extends PureComponent {
   }
 
   render() {
-    const {data, rowIndex, columnIndex, style} = this.props;
+    const {data, rowIndex, columnIndex, style, classes} = this.props;
     const {sheet, onMouseDown, onMouseUp, onMouseOver, onMouseDoubleClick, onKeyDown, onContextMenu} = data;
     let innerContent = null;
 
@@ -298,7 +357,12 @@ class Cell extends PureComponent {
     }
 
     const cell = sheet.getCell(rowIndex, columnIndex);
-    const {value, mergedStyle} = Cell.getCellValueAndStyle(cell, style);
+    let {value, mergedStyle} = Cell.getCellValueAndStyle(cell, style);
+
+    // render rich text
+    if (value instanceof RichText) {
+      value = this.renderRichText(cell, value, mergedStyle)
+    }
 
     // render data validation
     const dataValidation = cell.dataValidation();
@@ -318,7 +382,8 @@ class Cell extends PureComponent {
     }
 
     return (
-      <div style={mergedStyle} className={"not-selectable"}
+      <div style={mergedStyle}
+           className={`${classes.notSelectable} ${classes.cellDefault}`}
            tabIndex={0}
            onContextMenu={e => onContextMenu(rowIndex, columnIndex, mergedStyle, e)}
            onKeyDown={(e) => onKeyDown(rowIndex, columnIndex, mergedStyle, e)}
@@ -332,4 +397,4 @@ class Cell extends PureComponent {
   }
 }
 
-export default Cell;
+export default withStyles(styles)(Cell);
