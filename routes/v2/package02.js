@@ -4,6 +4,7 @@ const User = require('../../models/user');
 const Workbook = require('../../models/workbook/workbook');
 const Value = require('../../models/workbook/value');
 const Package = require('../../models/package/package');
+const Organization = require('../../models/organization/organization');
 const {checkPermission, Permission} = require('../../controller/v2/helpers');
 const error = require('../../config/error');
 const config = require('../../config/config');
@@ -56,18 +57,21 @@ router.get('/api/packages/:packagename?', async (req, res, next) => {
 });
 
 // admin can retrieve the packages based on the user name
+// TODO: needed
 router.get('/api/admin/:username?/packages/:packagename?', async (req, res, next) => {
     if (!checkPermission(req, Permission.WORKBOOK_TEMPLATE_MANAGEMENT)) {
         return next(error.api.NO_PERMISSION);
     }
 
     let packageQuery = {groupNumber: req.session.user.groupNumber};
+    //FIXME: package not store the users, but organizations and organizationType
     if (req.params.username) {
         const dbUser = await User.findOne({username: req.params.username});
         if (!dbUser) {
             return res.status(400).json({success: false, message: `User (${req.params.username}) does not exist.`});
         }
-        packageQuery.users = dbUser._id;
+        const userOrganization = await Organization.findOne({name: dbUser.organization});
+        packageQuery.organizations = userOrganization._id.toString();
     }
     if (req.params.packagename) {
         packageQuery.name = req.params.packagename;
