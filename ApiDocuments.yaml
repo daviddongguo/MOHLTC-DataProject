@@ -628,6 +628,146 @@ paths:
       - url: 'http://localhost:3000'
 
   # Package
+  /api/admin/packages/{packageName}:
+    get:
+      description: Returns one package
+      tags:
+        - Package
+      parameters:
+        - name: packageName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'firstpackage'
+      responses:
+        '400':
+          description: package not found
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+    put:
+      description: Returen the updated the package
+      tags:
+        - Package
+      parameters:
+        - name: packageName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'firstpackage'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organizationTypes:
+                  type: array
+                  items:
+                    type: string
+                adminNotes:
+                  type: string
+                workbooks:
+                  type: array
+                  items:
+                    type: string
+                endDate:
+                  type: string
+                organizations:
+                  type: array
+                  items:
+                    type: string
+                name:
+                  type: string
+                published:
+                  type: boolean
+                _id:
+                  type: string
+                startDate:
+                  type: string
+            examples:
+              '0':
+                value: |-
+                  {
+                              "published": false,
+                              "organizations": [
+                                  "5d653701adffa653832f1969"
+                              ],
+                              "organizationTypes": [
+                                  "5d653701adffa653832f1969"
+                              ],
+                              "workbooks": [
+                                  "5d5eb072d7ac99d4a4f473b8"
+                              ],
+                              "_id": "5d65380b04dbe131405f4b38",
+                              "name": "firstpackage",
+                              "startDate": "2019-08-27T14:02:21.360Z",
+                              "endDate": "2019-09-03T14:02:21.360Z",
+                              "adminNotes": "updated"
+                          }
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+  /api/admin/{userName}/packages/{packageName}:
+    get:
+      description: Returns the packages based on the user name and package name
+      tags:
+        - Package
+      parameters:
+        - name: userName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'test'
+        - name: packageName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'firstpackage'
+
+      responses:
+        '400':
+          description: failed operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
   /api/v2/admin/packages:
     get:
       description: Returns all packages on the database
@@ -713,7 +853,7 @@ paths:
       - url: 'http://localhost:3000'
   /api/v2/admin/packages/{packageName}:
     delete:
-      description: Auto generated using Swagger Inspector
+      description: Returns one package from database
       tags:
         - Package
       parameters:
@@ -725,7 +865,128 @@ paths:
           example: 'packageWillBeDeleted'
       responses:
         '200':
-          description: Auto generated using Swagger Inspector
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  # Workbook
+  /api/v2/admin/workbooks:
+    get:
+      description: Returns all workbook belonging to the current user group
+      tags:
+        - Workbook
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+
+  /api/v2/admin/workbook/{workbookName}:
+    get:
+      description: Returns one workbook from database
+      tags:
+        - Workbook
+      parameters:
+        - name: workbookName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'firstWorkbook'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: workbook not found
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/admin/workbook:
+    post:
+      description: Creates one workbook and adds related sheets, values
+      tags:
+        - Workbook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workbook:
+                  type: object
+                  properties:
+                    file:
+                      type: string
+                    name:
+                      type: string
+                sheets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      col2Att:
+                        type: object
+                        properties: {}
+                      name:
+                        type: string
+                      attIds:
+                        type: array
+                        items:
+                          type: string
+                      row2Cat:
+                        type: object
+                        properties: {}
+                      catIds:
+                        type: array
+                        items:
+                          type: string
+                values:
+                  type: object
+                  properties: {}
+            examples:
+              '0':
+                value: '{"workbook":{"name":"workWillBeDeleted","file":"A"},"sheets":[{"col2Att":{},"row2Cat":{},"name":"Sheet1","attIds":[],"catIds":[]},{"col2Att":{},"row2Cat":{},"name":"Sheet2","attIds":[],"catIds":[]},{"col2Att":{},"row2Cat":{},"name":"Sheet3","attIds":[],"catIds":[]}],"values":{}}'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/v2/admin/workbooks/{workbookName}:
+    delete:
+      description: Delete one workbook
+      tags:
+        - Workbook
+      parameters:
+        - name: workbookName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 'workWillBeDeleted'
+      responses:
+        '200':
+          description: successful operation
           content:
             application/json; charset=utf-8:
               schema:
