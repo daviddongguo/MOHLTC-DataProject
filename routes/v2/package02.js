@@ -242,6 +242,7 @@ router.post('/api/admin/packages', async (req, res, next) => {
     }
 });
 
+// TODO: needed
 router.put('/api/admin/packages/:packagename', async (req, res, next) => {
     if (!checkPermission(req, Permission.WORKBOOK_TEMPLATE_MANAGEMENT)) {
         return next(error.api.NO_PERMISSION);
@@ -340,8 +341,8 @@ router.put('/api/admin/packages/:packagename', async (req, res, next) => {
     }
 
 
-    // Add data
-    if (newWorkbookIds[0]) {
+    //FIXME: Add data
+    if (false ||  newWorkbookIds[0]) {
         const newDbWorkbooks = await Workbook.find({'_id': {$in: newWorkbookIds}}).populate('sheets').exec();
         const rowIds = [];
         let columnIds = {};
@@ -392,8 +393,8 @@ router.put('/api/admin/packages/:packagename', async (req, res, next) => {
         }
     }
 
-    // Delete data
-    if (deleteWorkbookIds[0]) {
+    //FIXME: Delete data
+    if (false || deleteWorkbookIds[0]) {
         const deleteDbWorkbooks = await Workbook.find({'_id': {$in: deleteWorkbookIds}}).populate('sheets').exec();
         const rowIds = [];
         let columnIds = {};
@@ -419,15 +420,15 @@ router.put('/api/admin/packages/:packagename', async (req, res, next) => {
             });
 
             // remove the deleted item
-            if (rowIds[0] && columnIds) {
-                for (let rowKey in dbPackage.values.data) {
-                    for (let i = 0; i < rowIds.length; i++) {
-                        if (rowIds[i].toString() === rowKey.toString()) {
-                            delete dbPackage.values.data[rowKey];
-                        }
-                    }
-                }
-            }
+            // if (rowIds[0] && columnIds) {
+            //     for (let rowKey in dbPackage.values.data) {
+            //         for (let i = 0; i < rowIds.length; i++) {
+            //             if (rowIds[i].toString() === rowKey.toString()) {
+            //                 delete dbPackage.values.data[rowKey];
+            //             }
+            //         }
+            //     }
+            // }
         }
     }
 
