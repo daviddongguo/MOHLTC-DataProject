@@ -59,8 +59,7 @@ module.exports = {
                     organization: req.body.organization,
                     // FIXME: delete permissions when deploying
                     permissions: req.body.permissions,
-                    validated: req.body.validated === undefined ? false : req.body.validated,
-                    active: req.body.active === undefined ? false : req.body.active,
+                    validated: req.body.validated || false,
                     type: 2, // system admin=0, form manager=1, user=2
                     email: req.body.email,
                 });

@@ -1,5 +1,5 @@
 # DataProject  [![Build Status](https://travis-ci.com/LesterLyu/MOHLTC-DataProject.svg?branch=dev-lester)](https://travis-ci.com/LesterLyu/MOHLTC-DataProject)
-## Live on http://ec2-3-16-106-158.us-east-2.compute.amazonaws.com/react
+## Live on http://ec2-3-13-195-83.us-east-2.compute.amazonaws.com/react
 
 ## Documents
 > Please ignore the documents that is not listed here.
@@ -8,6 +8,7 @@
 - [Excel Indexed Colors](https://github.com/ClosedXML/ClosedXML/wiki/Excel-Indexed-Colors)
 - [Supported excel styles to display in front-end](documents/excel-display.md)
 - [Why this approach?](documents/Generic%20Data%20Project.pdf)
+- [Backlog](documents/backlog.md)
 
 ## Dependencies
 > The libraries you need to **maintain** if you are on this project.
@@ -20,11 +21,12 @@
 ## Purpose
 This is complicated.
 
-## Language
+## Stack
 The logic of this application is mainly done in Javascript. Tools used:
 - Server-side: *Node.js*, *Express*
   - User authentication: Passport
   - Database Driver: Mongoose
 - Front-end Library: *React.js*
-- Front-end Styling: [Coreui](https://github.com/coreui/coreui-react) & [Material-ui](https://github.com/mui-org/material-ui)
+- Front-end project template: [Coreui](https://github.com/coreui/coreui-react)
+- Front-end Styling: [Material-ui](https://github.com/mui-org/material-ui)
 - Database: MongoDB

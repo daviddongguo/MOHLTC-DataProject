@@ -1,11 +1,23 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {
-  Paper, Grid, Button, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+  Paper,
+  Grid,
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Fade,
 } from '@material-ui/core';
-import {adminGetPackages, userGetPackages, adminDeletePackage} from "../../controller/package";
+import {
+  adminGetPackages, userGetPackages, adminDeletePackage
+} from "../../controller/package";
 import PackageCard from './components/Card';
 import Loading from "../components/Loading";
+import PackagePicker from "./components/Picker";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -21,18 +33,19 @@ export default function CreatePackage(props) {
   const [values, setValues] = React.useState({
     packages: null,
     dialog: false,
+    picker: null,
     selectedName: null,
+    organizations: [],
+    pickedPackage: null
   });
 
   useEffect(() => {
-    if (values.packages === null) {
-      if (params.mode === 'admin') {
-        adminGetPackages().then(packages => setValues(values => ({...values, packages})));
-      } else if (params.mode === 'user') {
-        userGetPackages().then(packages => setValues(values => ({...values, packages})));
-      }
+    if (params.mode === 'admin') {
+      adminGetPackages().then(packages => setValues(values => ({...values, packages})));
+    } else if (params.mode === 'user') {
+      userGetPackages().then(packages => setValues(values => ({...values, packages})));
     }
-  });
+  }, []);
 
   const allPackages = () => {
     const list = [];
@@ -43,16 +56,37 @@ export default function CreatePackage(props) {
       list.push(
         <Grid key={i} item>
           <PackageCard type="package" fileName={name} deleteCb={params.mode === 'admin' ? openDialog : undefined}
-                       editHref={params.mode === 'admin' ? '/admin/packages/' + name : '/packages/' + name}/>
+                       onOpen={onOpen} openParams={[packages[i]]}
+          />
         </Grid>
       )
     }
     return list;
   };
 
-  const closeDialog = () => setValues(values => ({...values, dialog: false, selectedName: null}));
+  const onOpen = (name, pack) => e => {
+    if (params.mode === "admin") {
+      // props.history.push('/admin/packages/' + name);
+      openPicker(pack, e.target);
+    }
+    else
+      props.history.push('/packages/' + name);
+  };
 
+  const closeDialog = () => setValues(values => ({...values, dialog: false, selectedName: null}));
+  const closePicker = () => setValues(values => ({...values, picker: null}));
   const openDialog = name => setValues(values => ({...values, dialog: true, selectedName: name}));
+
+  const openPicker = (pack, anchorEl) => {
+    const organizations = pack.organizations.map(org => org.name);
+    if (organizations.length === 0) {
+      console.log('No organizations');
+    } else if (organizations.length === 1) {
+      props.history.push('/admin/packages/' + pack.name + '/' + organizations[0]);
+    } else {
+      setValues(values => ({...values, organizations, picker: anchorEl, pickedPackage: pack}))
+    }
+  };
 
   const handleConfirmDelete = () => {
     const name = values.selectedName;
@@ -96,17 +130,30 @@ export default function CreatePackage(props) {
     )
   };
 
+  const handlePick = (org) => {
+    props.history.push('/admin/packages/' + values.pickedPackage.name + '/' + org);
+  };
+
   return (
-    <Paper className={classes.container}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
-            All Packages
-          </Typography>
+    <Fade in>
+      <Paper className={classes.container}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>
+              All Packages
+            </Typography>
+          </Grid>
+          {allPackages()}
         </Grid>
-        {allPackages()}
-      </Grid>
-      <br/>
-      {dialog()}
-    </Paper>)
+        <br/>
+        {dialog()}
+        <PackagePicker
+          anchorEl={values.picker}
+          onClose={closePicker}
+          onSelect={handlePick}
+          options={values.organizations}
+          title={'Pick an organization'}
+        />
+      </Paper>
+    </Fade>)
 }

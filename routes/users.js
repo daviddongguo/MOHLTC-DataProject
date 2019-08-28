@@ -10,33 +10,13 @@ let router = express.Router();
 
 passport.use(new LdapStrategy(config.OPTS));
 
-// used in register page
+// registrations related
 router.get('/api/v2/groups', groupController.getGroups);
-// router.get('/api/v2/organizations', groupController.getOrganizations);
+router.post('/api/v2/groups', groupController.createGroup);
+router.get('/api/v2/groups/:number', groupController.getOrganizationsInGroup);
 
-
-const Organization = require('../models/organization/organization');
-router.get('/api/v2/organizations', async (req, res, next) => {
-    try {
-        const organizations = await Organization.find();
-        if (organizations[0]) {
-            return res.status(200).json({organizations});
-        }
-        return res.status(204).json();
-    } catch (e) {
-        next(e);
-    }
-});
 router.get('/api/check/email/:email', user_controller.check_email);
 router.get('/api/check/username/:username', user_controller.check_username);
-
-// POST request for user sign up locally
-router.post('/api/signup/local', registration_local_controller.user_sign_up_local);
-
-
-router.post('/api/v2/groups', groupController.createGroup);
-
-
 // Query the current user logged in.
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
 
@@ -51,7 +31,8 @@ router.get('/api/organization_details', user_controller.getOrganizationDetails);
 
 // POST request for user sign up from ldap server
 router.post('/api/signup', registration_ldap_controller.user_ldap_signup);
-
+// POST request for user sign up locally
+router.post('/api/signup/local', registration_local_controller.user_sign_up_local);
 
 // POST request for user sign in
 router.post('/api/login/local', user_controller.user_log_in);
@@ -72,11 +53,7 @@ router.get('/validate/:token', user_controller.user_validate);
 // check authentication middleware
 router.use((req, res, next) => {
     if (!req.isAuthenticated()) {
-        return res.status(403).json({
-            loginRequired: true,
-            success: false,
-            message: "Sorry, you don't have the permission."
-        })
+        return res.status(403).json({loginRequired: true, success: false, message: "Sorry, you don't have the permission."})
     } else {
         next();
     }
@@ -86,10 +63,9 @@ router.use((req, res, next) => {
 router.get('/api/users/:username/active', user_controller.check_user_active);
 // Update a user's status. Used to disable or enable an account.
 router.put('/api/users/:username/active', user_controller.edit_user_active);
-
 router.put('/api/users/active/:username', user_controller.edit_user_active);
-router.put('/api/users/validated/:username', user_controller.edit_user_validated);
-router.put('/api/users/organization/:username', user_controller.edit_user_organization);
+
+router.put('/api/users/validated/:username', user_controller.edit_validated);
 
 // GET log out current account
 router.get('/api/logout', user_controller.user_log_out);
