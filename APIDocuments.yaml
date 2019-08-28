@@ -5,25 +5,9 @@ info:
   version: '0.1'
 servers:
   - url: 'http://localhost:3000'
+  - url: 'http://ec2-3-13-195-83.us-east-2.compute.amazonaws.com/'
 paths:
   # Register
-  /api/isloggedin:
-    get:
-      description: Returns the true if the user is authenticated, otherwise false
-      tags:
-        - register
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json; charset=utf-8:
-              schema:
-                type: string
-              examples: {}
-      servers:
-        - url: 'http://localhost:3000'
-    servers:
-      - url: 'http://localhost:3000'
   /api/check/email/{email}:
     get:
       description: Returns warning message if the checking email exists in the database, otherwise return nothing
@@ -36,6 +20,11 @@ paths:
           schema:
             type: string
           description: the email that will be checked
+          examples:
+            '0':
+              value: "email@mail.com"
+            '1':
+              value: "NoThisemail@mail.com"
       responses:
         '200':
           description: Found the repeated email on the database
@@ -67,6 +56,11 @@ paths:
           schema:
             type: string
           description: the username that will be checked
+          examples:
+            '0':
+              value: "test"
+            '1':
+              value: "NoThisUser"
       responses:
         '200':
           description: Found the repeated user name on the database
@@ -140,6 +134,45 @@ paths:
       - url: 'http://localhost:3000'
 
   # Login
+  /api/logout:
+    get:
+      description: Logout
+      tags:
+        - login
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: string
+              examples: {}
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
+  /api/isloggedin:
+    get:
+      description: Returns the true if the user is authenticated, otherwise false
+      tags:
+        - login
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+              examples:
+                '0':
+                  value: {"isLoggedIn": true}
+                '1':
+                  value: {"isLoggedIn": false}
+
+      servers:
+        - url: 'http://localhost:3000'
+    servers:
+      - url: 'http://localhost:3000'
   /api/login/local:
     post:
       description: Returns redirect Url string and write the login user into session if the username and password are correct otherwise returns an error message
@@ -722,7 +755,7 @@ paths:
                           }
       responses:
         '200':
-          description: Auto generated using Swagger Inspector
+          description: successful operation
           content:
             application/json; charset=utf-8:
               schema:
