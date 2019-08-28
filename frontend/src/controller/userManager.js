@@ -34,11 +34,15 @@ export async function getAllGroups() {
 
 export async function getAllOrganizations(groupNumber) {
   let urlStr = config.server + '/api/v2/organizations';
-  if(groupNumber){
+  if (groupNumber) {
     urlStr += '?groupNumber=' + groupNumber;
   }
-  const result = await axios.get(urlStr);
-  return result.data.organizations;
+  try {
+    const result = await axios.get(urlStr);
+    return result.data.organizations;
+  } catch (e) {
+    throw e;
+  }
 }
 
 export async function getAllRequestUsers() {
@@ -63,18 +67,18 @@ export async function switchUserActive(username, activeValue) {
 
 export async function switchUserValidate(user, validatedValue) {
   // change the status of validate
-  try{
+  try {
     let result = [];
     const resValidated = await axios.put(config.server + '/api/users/validated/' + user.username, {validated: validatedValue}, axiosConfig);
     result.push(resValidated);
     // add this user to the organization when validate is ture
     // subtract this user from the organization when validate is false
     if (user.organization) {
-      const resOrganization  = await axios.post(config.server + '/api/v2/organization/' + user.organization + '/' + user._id, {validated: validatedValue}, axiosConfig);
+      const resOrganization = await axios.post(config.server + '/api/v2/organization/' + user.organization + '/' + user._id, {validated: validatedValue}, axiosConfig);
       result.push(resOrganization);
       return result;
     }
-  }catch (e) {
+  } catch (e) {
     return e;
   }
 

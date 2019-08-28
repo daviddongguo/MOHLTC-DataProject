@@ -12,7 +12,21 @@ passport.use(new LdapStrategy(config.OPTS));
 
 // used in register page
 router.get('/api/v2/groups', groupController.getGroups);
-router.get('/api/v2/organizations', groupController.getOrganizations);
+// router.get('/api/v2/organizations', groupController.getOrganizations);
+
+
+const Organization = require('../models/organization/organization');
+router.get('/api/v2/organizations', async (req, res, next) => {
+    try {
+        const organizations = await Organization.find();
+        if (organizations[0]) {
+            return res.status(200).json({organizations});
+        }
+        return res.status(204).json();
+    } catch (e) {
+        next(e);
+    }
+});
 router.get('/api/check/email/:email', user_controller.check_email);
 router.get('/api/check/username/:username', user_controller.check_username);
 
@@ -58,7 +72,11 @@ router.get('/validate/:token', user_controller.user_validate);
 // check authentication middleware
 router.use((req, res, next) => {
     if (!req.isAuthenticated()) {
-        return res.status(403).json({loginRequired: true, success: false, message: "Sorry, you don't have the permission."})
+        return res.status(403).json({
+            loginRequired: true,
+            success: false,
+            message: "Sorry, you don't have the permission."
+        })
     } else {
         next();
     }

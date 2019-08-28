@@ -42,18 +42,18 @@ module.exports = {
     },
 
     createGroup: async (req, res, next) => {
-        let {groupNumber, name} =req.body;
-        if(!groupNumber){
+        let {groupNumber, name} = req.body;
+        if (!groupNumber) {
             groupNumber = req.session.user.groupNumber;
         }
         const query = {groupNumber, name};
         try {
             const dbGroup = await Group.findOne(query);
-            if(dbGroup){
+            if (dbGroup) {
                 return res.status(400).json({success: false, message: `${name} already has been used.`});
             }
             const group = new Group(query);
-            const result = await  group.save();
+            const result = await group.save();
             return res.json({success: true, message: `${name} added.`, group: result})
         } catch (e) {
             return res.status(500).json({success: false, message: e});
@@ -62,15 +62,12 @@ module.exports = {
 
     // no login required, used for registration
     getOrganizations: async (req, res, next) => {
-        const groupNumber = req.query.groupNumber;
         try {
-            let organizations;
-            if(groupNumber){
-                organizations = await Organization.find({groupNumber}, );
-            }else{
-                organizations = await Organization.find( );
+            const organizations = await Organization.find();
+            if (organizations[0]) {
+                return res.status(200).json({organizations});
             }
-            return res.json({organizations});
+            return res.status(204).json();
         } catch (e) {
             next(e);
         }
