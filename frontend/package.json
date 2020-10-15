@@ -40,7 +40,8 @@
     "reactstrap": "^8.0.1",
     "tinycolor2": "^1.4.1",
     "workerpool": "https://github.com/josdejong/workerpool.git",
-    "xlsx-populate": "https://github.com/LesterLyu/xlsx-populate.git"
+    "xlsx-populate": "https://github.com/LesterLyu/xlsx-populate.git",
+    "fast-formula-parser": "https://github.com/LesterLyu/fast-formula-parser.git"
   },
   "devDependencies": {
     "@types/react-window": "1.8.0",
