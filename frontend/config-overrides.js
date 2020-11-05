@@ -1,10 +1,12 @@
-const WorkerPlugin = require('worker-plugin');
-const {FormulaParser} = require("fast-formula-parser/grammar/hooks");
-const allTokenNames = FormulaParser.allTokens.map(tokenType => tokenType.name);
-const TerserPlugin = require('terser-webpack-plugin');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
-const {DuplicatesPlugin} = require("inspectpack/plugin");
-const webpack = require('webpack');
+const WorkerPlugin = require("worker-plugin");
+const { FormulaParser } = require("fast-formula-parser/grammar/hooks");
+const allTokenNames = FormulaParser.allTokens.map(
+  (tokenType) => tokenType.name
+);
+const TerserPlugin = require("terser-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const { DuplicatesPlugin } = require("inspectpack/plugin");
+const webpack = require("webpack");
 
 module.exports = {
   webpack: function (config, env) {
@@ -12,18 +14,22 @@ module.exports = {
       reasons: true,
     };
     config.plugins.push(new WorkerPlugin());
-    config.plugins.push(new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development',
-      DEBUG: false,
-      SERVER_URL: 'http://localhost:3000',
-      PUBLIC_URL: 'http://localhost:3003',
-    }));
-    if (process.env.NODE_ENV === 'production') {
-      config.plugins.push(new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        defaultSizes: 'parsed',
-        reportFilename: 'webpack-report.html',
-      }));
+    config.plugins.push(
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: "development",
+        DEBUG: false,
+        SERVER_URL: "http://localhost:3000",
+        PUBLIC_URL: "http://localhost:3003",
+      })
+    );
+    if (process.env.NODE_ENV === "production") {
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: "static",
+          defaultSizes: "parsed",
+          reportFilename: "webpack-report.html",
+        })
+      );
     }
 
     // config.plugins.push(new DuplicatesPlugin({
@@ -32,7 +38,7 @@ module.exports = {
     //   // Display full duplicates information? (Default: `false`)
     //   verbose: false
     // }));
-    config.externals = ['child_process', 'worker_threads'];
+    config.externals = ["child_process", "worker_threads"];
 
     config.optimization.minimizer[0] = new TerserPlugin({
       terserOptions: {
@@ -81,9 +87,9 @@ module.exports = {
     config.optimization.splitChunks.cacheGroups = {
       excel: {
         test: /[\\/]node_modules[\\/](xlsx-populate|chevrotain|fast-formula-parser|jstat|object-hash|pako|jszip|elliptic|bn.js|cfb|readable-stream|asn1.js|saxes|buffer|hash.js|sha.js|diffie-hellman|des.js|parse-san1|md5.js|lie|bessel|regexp-to-ast|browserify-aes|browserify-rsa|parse-asn1|xmlchars|)[\\/]/,
-        name: 'excel-lib',
-        chunks: 'all',
-      }
+        name: "excel-lib",
+        chunks: "all",
+      },
     };
     return config;
   },
@@ -92,4 +98,3 @@ module.exports = {
     return config;
   },
 };
-

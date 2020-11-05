@@ -1,31 +1,28 @@
-import React, {Component} from 'react';
-import Typography from '@material-ui/core/Typography';
-import {signUpLocal, checkUsername, checkEmail, getAllGroups, getAllOrganizations} from "../../../controller/userManager";
-
+import React, { Component } from "react";
+import Typography from "@material-ui/core/Typography";
 import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Form,
-  Row
-} from 'reactstrap';
-import {Link} from "react-router-dom";
-import {TextField, MenuItem} from '@material-ui/core';
+  signUpLocal,
+  checkUsername,
+  checkEmail,
+  getAllGroups,
+  getAllOrganizations,
+} from "../../../controller/userManager";
+
+import { Button, Card, CardBody, Col, Container, Form, Row } from "reactstrap";
+import { Link } from "react-router-dom";
+import { TextField, MenuItem } from "@material-ui/core";
 
 class Register extends Component {
-
   constructor(props) {
     super(props);
-    this.setup = props.params.mode === 'setup';
+    this.setup = props.params.mode === "setup";
     this.state = {
-      username: '',
-      email: '@ontario.ca',
+      username: "",
+      email: "@ontario.ca",
       firstName: "",
       lastName: "",
-      password: '',
-      repeatPassword: '',
+      password: "",
+      repeatPassword: "",
       phoneNumber: "",
       selectedGroupNumber: 1,
       dbGroups: [],
@@ -37,15 +34,15 @@ class Register extends Component {
       ServerErrormessage: null,
 
       isUsernameError: false,
-      usernameErrorMessage: '',
+      usernameErrorMessage: "",
       isEmailError: false,
-      emailErrorMessage: '',
+      emailErrorMessage: "",
       isPasswordError: false,
-      passwordErrorMessage: '',
+      passwordErrorMessage: "",
       isRepeatPasswordError: false,
-      repeatPasswordErrorMessage: '',
+      repeatPasswordErrorMessage: "",
       isGroupNumberError: false,
-      groupNumberErrorMessage: '',
+      groupNumberErrorMessage: "",
     };
     this.initialGroups();
   }
@@ -53,41 +50,52 @@ class Register extends Component {
   initialGroups = () => {
     getAllGroups().then((dbGroups) => {
       if (dbGroups[0]) {
-        getAllOrganizations().then(dbOrganizations => {
+        getAllOrganizations().then((dbOrganizations) => {
           this.setState({
             dbGroups,
             selectedGroupNumber: dbGroups[0].groupNumber,
             dbOrganizations,
             selectedOrganizations: dbOrganizations,
-            selectedOrganization: dbOrganizations[0].name
+            selectedOrganization: dbOrganizations[0].name,
           });
         });
       }
-    })
+    });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
-    signUpLocal(this.setup, this.state.username, this.state.password,
-      this.state.firstName, this.state.lastName, this.state.selectedOrganization, this.state.email, this.state.phoneNumber, this.state.selectedGroupNumber)
-      .then(response => {
+    signUpLocal(
+      this.setup,
+      this.state.username,
+      this.state.password,
+      this.state.firstName,
+      this.state.lastName,
+      this.state.selectedOrganization,
+      this.state.email,
+      this.state.phoneNumber,
+      this.state.selectedGroupNumber
+    )
+      .then((response) => {
         this.props.history.push(response.data.redirect);
       })
-      .catch(err => {
-        if ((typeof err.response.data.message) === 'string') {
+      .catch((err) => {
+        if (typeof err.response.data.message === "string") {
           const serverErrorMessage = err.response.data.message;
           console.log(serverErrorMessage);
-          if (serverErrorMessage.toLowerCase().includes('username')) {
+          if (serverErrorMessage.toLowerCase().includes("username")) {
             this.setState({
               isUsernameError: true,
               usernameErrorMessage: serverErrorMessage,
             });
-          } else if (serverErrorMessage.toLowerCase().includes('email')) {
+          } else if (serverErrorMessage.toLowerCase().includes("email")) {
             this.setState({
               isEmailError: true,
               emailErrorMessage: serverErrorMessage,
             });
-          } else if (serverErrorMessage.toLowerCase().includes('group number')) {
+          } else if (
+            serverErrorMessage.toLowerCase().includes("group number")
+          ) {
             this.setState({
               isGroupNumberError: true,
               ServerErrormessage: serverErrorMessage,
@@ -96,25 +104,23 @@ class Register extends Component {
             this.setState({
               isServerErrormessage: true,
               ServerErrormessage: serverErrorMessage,
-            })
+            });
           }
         } else {
           this.setState({
             isServerErrormessage: true,
             ServerErrormessage: err.toString(),
-          })
+          });
         }
-      })
+      });
   };
 
   validateUsername = () => {
-
-
     // local validate
     const username = this.state.username;
     if (username.length >= 1 && username.length <= 50) {
       // validate in back-end
-      console.log('checking username');
+      console.log("checking username");
       checkUsername(username).then((response) => {
         const serverMessage = response.data.message;
         if (serverMessage) {
@@ -127,7 +133,7 @@ class Register extends Component {
         } else {
           this.setState({
             isUsernameError: false,
-            usernameErrorMessage: '',
+            usernameErrorMessage: "",
           });
           return true;
         }
@@ -135,7 +141,7 @@ class Register extends Component {
     } else {
       this.setState({
         isUsernameError: true,
-        usernameErrorMessage: 'Username must be 1-50 characters long.',
+        usernameErrorMessage: "Username must be 1-50 characters long.",
       });
       return false;
     }
@@ -143,7 +149,10 @@ class Register extends Component {
 
   validateEmail = () => {
     const email = this.state.email;
-    if (email !== '@ontario.ca' && email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)) {
+    if (
+      email !== "@ontario.ca" &&
+      email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)
+    ) {
       // validate in back-end
       checkEmail(email).then((response) => {
         const serverMessage = response.data.message;
@@ -157,7 +166,7 @@ class Register extends Component {
         } else {
           this.setState({
             isEmailError: false,
-            emailErrorMessage: '',
+            emailErrorMessage: "",
           });
           return true;
         }
@@ -165,7 +174,7 @@ class Register extends Component {
     } else {
       this.setState({
         isEmailError: true,
-        emailErrorMessage: 'Email is invalid.',
+        emailErrorMessage: "Email is invalid.",
       });
       return false;
     }
@@ -173,36 +182,36 @@ class Register extends Component {
 
   validatePassword = () => {
     if (this.state.password.length >= 1) {
-      if (this.state.repeatPassword.length >= 1) { // validate the repeatPassword when it is not empty
+      if (this.state.repeatPassword.length >= 1) {
+        // validate the repeatPassword when it is not empty
         this.validateRepeatPassword();
       } else {
         this.setState({
           isPasswordError: false,
-          passwordErrorMessage: '',
+          passwordErrorMessage: "",
         });
         return false;
       }
     } else {
       this.setState({
         isPasswordError: true,
-        passwordErrorMessage: 'Passwords can not be empty.',
+        passwordErrorMessage: "Passwords can not be empty.",
       });
       return true;
     }
-
   };
 
   validateRepeatPassword = () => {
     if (this.state.password === this.state.repeatPassword) {
       this.setState({
         isRepeatPasswordError: false,
-        repeatPasswordErrorMessage: '',
+        repeatPasswordErrorMessage: "",
       });
       return false;
     } else {
       this.setState({
         isRepeatPasswordError: true,
-        repeatPasswordErrorMessage: 'Passwords must be identical.',
+        repeatPasswordErrorMessage: "Passwords must be identical.",
       });
       return true;
     }
@@ -212,63 +221,65 @@ class Register extends Component {
     if (this.state.selectedGroupNumber >= 1) {
       this.setState({
         isGroupNumberError: false,
-        groupNumberErrorMessage: '',
+        groupNumberErrorMessage: "",
       });
       return false;
     } else {
       this.setState({
         isGroupNumberError: true,
-        groupNumberErrorMessage: 'GroupNumber can not be empty or 0.',
+        groupNumberErrorMessage: "GroupNumber can not be empty or 0.",
       });
       return true;
     }
   };
 
   validateAllInputs() {
-    return (this.state.username === '') ||
-      this.state.password === '' ||
-      this.state.repeatPassword === '' ||
+    return (
+      this.state.username === "" ||
+      this.state.password === "" ||
+      this.state.repeatPassword === "" ||
       this.state.isUsernameError ||
       this.state.isEmailError ||
       this.state.isPasswordError ||
       this.state.isRepeatPasswordError ||
       this.state.isGroupNumberError
+    );
   }
 
-  handleChange = name => event => {
+  handleChange = (name) => (event) => {
     const value = event.target.value;
     this.setState({
-      [name]: value
+      [name]: value,
     });
 
-    if (name === 'username') {
+    if (name === "username") {
       this.setState({
         isUsernameError: false,
-        usernameErrorMessage: '',
+        usernameErrorMessage: "",
       });
-    } else if (name === 'email') {
+    } else if (name === "email") {
       this.setState({
         isEmailError: false,
-        emailErrorMessage: '',
+        emailErrorMessage: "",
       });
-    } else if (name === 'password') {
+    } else if (name === "password") {
       this.setState({
         isPasswordError: false,
-        passwordErrorMessage: '',
+        passwordErrorMessage: "",
         isRepeatPasswordError: false,
-        repeatPasswordErrorMessage: '',
+        repeatPasswordErrorMessage: "",
       });
-    } else if (name === 'repeatPassword') {
-      console.log('reapeat');
+    } else if (name === "repeatPassword") {
+      console.log("reapeat");
       this.setState({
         isRepeatPasswordError: false,
-        repeatPasswordErrorMessage: '',
+        repeatPasswordErrorMessage: "",
       });
-    } else if (name === 'groupNumber') {
+    } else if (name === "groupNumber") {
       // FIXME: use local data instead of remote data
       let selectedOrganizations = [];
-      this.state.dbOrganizations.forEach( o => {
-        if(o.groupNumber === value){
+      this.state.dbOrganizations.forEach((o) => {
+        if (o.groupNumber === value) {
           selectedOrganizations.push(o);
         }
       });
@@ -276,7 +287,7 @@ class Register extends Component {
         selectedOrganizations,
         selectedOrganization: selectedOrganizations[0].name,
         isGroupNumberError: false,
-        groupNumberErrorMessage: '',
+        groupNumberErrorMessage: "",
       });
     }
   };
@@ -290,7 +301,7 @@ class Register extends Component {
               <Card className="mx-4">
                 <CardBody className="p-4">
                   <Form onSubmit={this.handleSubmit}>
-                    <h1>{this.setup ? 'Setup' : 'Register'}</h1>
+                    <h1>{this.setup ? "Setup" : "Register"}</h1>
                     <p className="text-muted">Create your account</p>
 
                     <TextField
@@ -299,7 +310,7 @@ class Register extends Component {
                       required
                       autoFocus={true}
                       value={this.state.username}
-                      onChange={this.handleChange('username')}
+                      onChange={this.handleChange("username")}
                       onBlur={this.validateUsername}
                       margin="normal"
                       fullWidth
@@ -312,7 +323,7 @@ class Register extends Component {
                       type="email"
                       required={true}
                       value={this.state.email}
-                      onChange={this.handleChange('email')}
+                      onChange={this.handleChange("email")}
                       onBlur={this.validateEmail}
                       margin="normal"
                       fullWidth
@@ -325,7 +336,7 @@ class Register extends Component {
                       type="string"
                       required={false}
                       value={this.state.firstName}
-                      onChange={this.handleChange('firstName')}
+                      onChange={this.handleChange("firstName")}
                       margin="normal"
                       fullWidth
                     />
@@ -335,7 +346,7 @@ class Register extends Component {
                       type="string"
                       required={false}
                       value={this.state.lastName}
-                      onChange={this.handleChange('lastName')}
+                      onChange={this.handleChange("lastName")}
                       margin="normal"
                       fullWidth
                     />
@@ -345,7 +356,7 @@ class Register extends Component {
                       type="string"
                       required={false}
                       value={this.state.phoneNumber}
-                      onChange={this.handleChange('phoneNumber')}
+                      onChange={this.handleChange("phoneNumber")}
                       margin="normal"
                       fullWidth
                     />
@@ -353,7 +364,7 @@ class Register extends Component {
                     <TextField
                       label="Password"
                       value={this.state.password}
-                      onChange={this.handleChange('password')}
+                      onChange={this.handleChange("password")}
                       onBlur={this.validatePassword}
                       type="password"
                       required={true}
@@ -366,7 +377,7 @@ class Register extends Component {
                     <TextField
                       label="RepeatPassword"
                       value={this.state.repeatPassword}
-                      onChange={this.handleChange('repeatPassword')}
+                      onChange={this.handleChange("repeatPassword")}
                       onBlur={this.validateRepeatPassword}
                       type="password"
                       required={true}
@@ -380,12 +391,15 @@ class Register extends Component {
                       select
                       label="Group Name"
                       value={this.state.selectedGroupNumber}
-                      onChange={this.handleChange('groupNumber')}
+                      onChange={this.handleChange("groupNumber")}
                       margin="normal"
                       fullWidth
                     >
-                      {this.state.dbGroups.map(option => (
-                        <MenuItem key={option.groupNumber} value={option.groupNumber}>
+                      {this.state.dbGroups.map((option) => (
+                        <MenuItem
+                          key={option.groupNumber}
+                          value={option.groupNumber}
+                        >
                           {option.name}
                         </MenuItem>
                       ))}
@@ -393,22 +407,21 @@ class Register extends Component {
 
                     <TextField
                       select
-                      InputLabelProps={{shrink: true}}
+                      InputLabelProps={{ shrink: true }}
                       label="Organization"
                       value={this.state.selectedOrganization}
-                      onChange={this.handleChange('organization')}
+                      onChange={this.handleChange("organization")}
                       margin="normal"
                       fullWidth
                     >
-                      {this.state.selectedOrganizations.map(option => (
+                      {this.state.selectedOrganizations.map((option) => (
                         <MenuItem key={option._id} value={option.name}>
                           {option.name}
                         </MenuItem>
                       ))}
                     </TextField>
 
-
-                    <br/>
+                    <br />
                     <Button
                       variant="outlined"
                       color="primary"
@@ -422,10 +435,13 @@ class Register extends Component {
                     <Typography component="p" color="error">
                       {this.state.ServerErrormessage}
                     </Typography>
-                    {this.setup ? null : <Link to="/login">
-                      <Button color="link"><span>Already have an account?</span></Button>
-                    </Link>}
-
+                    {this.setup ? null : (
+                      <Link to="/login">
+                        <Button color="link">
+                          <span>Already have an account?</span>
+                        </Button>
+                      </Link>
+                    )}
                   </Form>
                 </CardBody>
               </Card>

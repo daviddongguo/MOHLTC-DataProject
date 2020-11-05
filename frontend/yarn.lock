@@ -5140,6 +5140,16 @@ fast-deep-equal@^3.1.1:
     chevrotain "^7.0.1"
     jstat "^1.9.3"
 
+"fast-formula-parser@https://github.com/LesterLyu/fast-formula-parser.git":
+  version "1.0.18"
+  uid c634b136b9c4cd7a52b0a9414e0ae82bc131d93d
+  resolved "https://github.com/LesterLyu/fast-formula-parser.git#c634b136b9c4cd7a52b0a9414e0ae82bc131d93d"
+  dependencies:
+    bahttext "^1.1.0"
+    bessel "^1.0.2"
+    chevrotain "^7.0.1"
+    jstat "^1.9.3"
+
 fast-glob@^2.0.2:
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-2.2.7.tgz#6953857c3afa475fff92ee6015d52da70a4cd39d"
