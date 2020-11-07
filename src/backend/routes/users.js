@@ -19,6 +19,7 @@ router.get('/api/check/email/:email', user_controller.check_email);
 router.get('/api/check/username/:username', user_controller.check_username);
 // Query the current user logged in.
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
+router.get('/api/getuserbyusername/:username', user_controller.get_user);
 
 router.get('/api/isloggedin', function (req, res) {
 	if (req.isAuthenticated()) {
@@ -54,19 +55,17 @@ router.post('/api/reset-password-link', user_controller.reset_password_link);
 router.get('/validate/:token', user_controller.user_validate);
 
 // check authentication middleware
-router.use((req, res, next) => {
-	if (!req.isAuthenticated()) {
-		return res
-			.status(403)
-			.json({
-				loginRequired: true,
-				success: false,
-				message: "Sorry, you don't have the permission.",
-			});
-	} else {
-		next();
-	}
-});
+// router.use((req, res, next) => {
+// 	if (!req.isAuthenticated()) {
+// 		return res.status(403).json({
+// 			loginRequired: true,
+// 			success: false,
+// 			message: "Inside User Routes: Sorry, you don't have the permission.",
+// 		});
+// 	} else {
+// 		next();
+// 	}
+// });
 
 // Update a user's status. Used to disable or enable an account.
 router.get('/api/users/:username/active', user_controller.check_user_active);

@@ -674,7 +674,7 @@ paths:
             type: string
           example: 'firstpackage'
       responses:
-        '400':
+        '404':
           description: package not found
           content:
             application/json; charset=utf-8:
@@ -942,7 +942,7 @@ paths:
       responses:
         '200':
           description: successful operation
-        '400':
+        '404':
           description: workbook not found
       servers:
         - url: 'http://localhost:3000'

@@ -57,7 +57,16 @@ const getUser = (username, cb) => {
 };
 
 module.exports = {
-	get_user: getUser,
+	// get_user: getUser
+	get_user: (req, res) => {
+		const username = req.params.username;
+		getUser(username, (err, user) => {
+			if (user) {
+				return res.status(200).json({success: true, user});
+			}
+			return res.status(404).json();
+		});
+	},
 
 	check_email: (req, res) => {
 		const email = req.params.email;
@@ -194,12 +203,10 @@ module.exports = {
 			});
 		}
 		if (req.params.username === req.session.user.username) {
-			return res
-				.status(400)
-				.json({
-					success: false,
-					message: 'Can not set the active value by yourself',
-				});
+			return res.status(400).json({
+				success: false,
+				message: 'Can not set the active value by yourself',
+			});
 		}
 		try {
 			const filter = {
