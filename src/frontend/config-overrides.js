@@ -1,8 +1,9 @@
 const WorkerPlugin = require("worker-plugin");
 const { FormulaParser } = require("fast-formula-parser/grammar/hooks");
-const allTokenNames = FormulaParser.allTokens.map(
-  (tokenType) => tokenType.name
-);
+// const allTokenNames = FormulaParser.allTokens.map(
+//   (tokenType) => tokenType.name
+// );
+
 const TerserPlugin = require("terser-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { DuplicatesPlugin } = require("inspectpack/plugin");
@@ -65,7 +66,7 @@ module.exports = {
           inline: 2,
         },
         mangle: {
-          reserved: allTokenNames,
+          //   reserved: allTokenNames,
           safari10: true,
         },
         output: {
