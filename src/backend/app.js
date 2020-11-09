@@ -23,6 +23,7 @@ const cookieSession = require('cookie-session');
 const cors = require('cors');
 
 const config = require('./config/config');
+const cleverDatabase = require('./config/cleverMongoDb');
 
 const error = require('./config/error');
 
@@ -49,7 +50,9 @@ app.use(express.static(path.join(__dirname, 'public/moh.css')));
 
 // MongoDB
 mongoose.connect(
-	process.env.NODE_ENV === 'test' ? config.testDatabase : config.database,
+	process.env.NODE_ENV === 'test'
+		? config.testDatabase
+		: cleverDatabase.database,
 	{
 		useNewUrlParser: true,
 		useFindAndModify: false,

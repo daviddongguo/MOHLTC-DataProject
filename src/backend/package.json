@@ -52,6 +52,7 @@
 		"watch": "grunt watch",
 		"prod": "grunt prod",
 		"aws": "NODE_ENV=production node app.js",
+		"heroku": "NODE_ENV=productionOnHeroku node app.js",
 		"build:frontend-pivotal": "cd ./frontend/ && npm run build:pivotal",
 		"pivotal:build": "grunt pivotal:build",
 		"pivotal:publish": "grunt pivotal:publish",
