@@ -79,5 +79,7 @@ module.exports = function (grunt) {
 		grunt.file.mkdir('build/zip/public/react');
 	});
 
-	grunt.registerTask('default', 'Executed default task', function () {});
+	grunt.registerTask('default', 'Executed default task', function () {
+		console.log('building...');
+	});
 };
