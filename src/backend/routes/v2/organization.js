@@ -8,14 +8,15 @@ const {
 	deleteOrganizationType,
 	updateOrganizationType,
 	getOrganizations,
+	OrgAddOrSubtractOneUser,
 	getOrganizationTypes,
 } = organizationController;
 
 // router.get('/api/v2/organizations/:mode?', getOrganizations);
 
-router.post('/api/v2/organization/:name/:userId', OrgAddOneUser);
+router.post('/api/v2/organizations', OrgAddOrSubtractOneUser);
 
-router.post('/api/v2/organizations', updateOrganization);
+router.put('/api/v2/organizations', updateOrganization);
 
 router.delete('/api/v2/organizations/:name', deleteOrganization);
 
