@@ -2,62 +2,17 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const {agent} = require('../config');
-
-const User = require('../../models/user');
+const userLogin = require('../userLogin');
 
 describe("Update a user's status. Used to disable or enable an account.", function () {
 	const usernameTest = 'test';
 	const passwordTest = 'test';
 
-	const secondUsername = 'manager';
-	const secondEmail = 'lester02@mail.com';
+	const secondUsername = 'second';
+	// const secondEmail = 'lester02@mail.com';
 
 	before(async () => {
-		await User.remove({username: secondUsername}, () => {});
-
-		// Sing up the second user
-		await agent
-			.post('/api/signup/local')
-			.send({
-				username: secondUsername,
-				email: secondEmail,
-				password: passwordTest,
-				active: false,
-				validated: false,
-				groupNumber: 1,
-				organization: 'King Hospital',
-				permissions: [
-					'CRUD-workbook-template',
-					'system-management',
-					'workbook-query',
-					'create-delete-attribute-category',
-					'user-management',
-					'package-management',
-				],
-			})
-			.then((res) => {
-				expect(res).to.have.status(200);
-				expect(res.body.success).to.be.true;
-				console.log(res.body);
-			})
-			.catch(function (err) {
-				throw err;
-			});
-
-		// Login in by usernameTest
-		await agent
-			.post('/api/login/local')
-			.send({
-				username: usernameTest,
-				password: passwordTest,
-			})
-			.then((res) => {
-				expect(res).to.have.status(200);
-				expect(res.body.success).to.be.true;
-			})
-			.catch(function (err) {
-				throw err;
-			});
+		await userLogin();
 	});
 
 	it("Check a user's status: active - success ", (done) => {

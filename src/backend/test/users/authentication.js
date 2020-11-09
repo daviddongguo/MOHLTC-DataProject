@@ -10,43 +10,15 @@ const User = require('../../models/user');
 
 describe('Local Authentication', function () {
 	this.timeout(10000);
-	before((done) => {
-		// remove all users
-		User.remove({}, () => {
-			done();
-		});
+	before(async () => {
+		await User.remove({username: 'three'}, () => {});
 	});
-	it('register an account to local server', (done) => {
+	it('register a user named three', (done) => {
 		requester
 			.post('/api/signup/local')
 			.send({
-				username: 'test',
-				email: 'email@mail.com',
-				active: true,
-				validated: true,
-				organization: 'IT Cluster',
-				groupNumber: 1, // can also be string
-				firstName: 'firstName',
-				lastName: 'lastName',
-				phoneNumber: '1212122',
-				password: 'test',
-				permissions: Object.values(globalConfig.permissions),
-			})
-			.then((res) => {
-				expect(res).to.have.status(200);
-				expect(res.body.success).to.be.true;
-				done();
-			})
-			.catch(function (err) {
-				throw err;
-			});
-	});
-
-	it('register second account to local server', (done) => {
-		requester
-			.post('/api/signup/local')
-			.send({
-				username: 'manage of King Hospital',
+				username: 'three',
+				password: 'three',
 				email: 'manage@mail.com',
 				organization: 'King Hospital',
 				groupNumber: 1, // can also be string

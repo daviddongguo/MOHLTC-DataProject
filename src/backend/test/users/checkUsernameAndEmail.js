@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-const globalConfig = require('../../config/config');
+const userLogin = require('../userLogin');
 
 const {agent} = require('../config');
 
@@ -8,30 +8,8 @@ describe('To check if the user is registered', function () {
 	const oneUsername = 'lester';
 	const oneEmail = 'lester@mail.com';
 
-	before((done) => {
-		agent
-			.post('/api/signup/local')
-			.send({
-				username: oneUsername,
-				email: oneEmail,
-				password: 'lester',
-				active: true,
-				validated: true,
-				organization: 'IT Cluster',
-				groupNumber: 1, // can also be string
-				firstName: 'firstName',
-				lastName: 'lastName',
-				phoneNumber: '1212122',
-				permissions: Object.values(globalConfig.permissions),
-			})
-			.then((res) => {
-				expect(res).to.have.status(200);
-				expect(res.body.success).to.be.true;
-				done();
-			})
-			.catch(function (err) {
-				console.log(err);
-			});
+	before(async () => {
+		await userLogin();
 	});
 
 	it('check the registered username', (done) => {

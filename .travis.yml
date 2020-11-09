@@ -6,7 +6,7 @@ before_script:
 services:
   - mongodb
 install:
-  - cd ./src/backend && yarn install
-  - cd ../frontend && yarn install
+  - cd ./src/frontend&& yarn install
+  - cd ../backend && yarn install
 script:
-  - cd ./src/backend && yarn test
+  - cd  yarn test
