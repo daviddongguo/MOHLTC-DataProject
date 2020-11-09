@@ -9,4 +9,4 @@ install:
   - cd ./src/frontend&& yarn install
   - cd ../backend && yarn install
 script:
-  - cd  yarn test
+  - yarn test
