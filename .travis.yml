@@ -8,5 +8,7 @@ services:
 install:
   - cd ./src/frontend&& yarn install
   - cd ../backend && yarn install
+
 script:
+  - echo $cleverMongoDbfile >config/cleverMongoDb.json
   - yarn test
