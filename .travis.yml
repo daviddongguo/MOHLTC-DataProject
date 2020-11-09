@@ -10,5 +10,5 @@ install:
   - cd ../backend && yarn install
 
 script:
-  - echo $cleverMongoDbfile >config/cleverMongoDb.json
+  - echo $cleverMongoDbfile >config/cleverMongoDb.js
   - yarn test
