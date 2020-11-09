@@ -1,5 +1,4 @@
 module.exports = function (grunt) {
-	dd;
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-compress');
 	grunt.loadNpmTasks('grunt-contrib-clean');
@@ -79,7 +78,7 @@ module.exports = function (grunt) {
 		grunt.file.mkdir('build/zip/public/react');
 	});
 
-	grunt.registerTask('default', 'Executed default task', function () {
+	grunt.registerTask('default', function () {
 		console.log('building...');
 	});
 };
