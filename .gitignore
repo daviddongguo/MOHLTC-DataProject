@@ -360,4 +360,3 @@ build/
 .vscode/
 mochawesome-report/
 frontend/dist/
-src/backend/config/cleverMongoDb.js
