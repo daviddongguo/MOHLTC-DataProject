@@ -23,7 +23,7 @@ jobs:
     - name: npm install, build, and test
       run: |
         cd src/frontend
-        npm install
+        yarn install 
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
