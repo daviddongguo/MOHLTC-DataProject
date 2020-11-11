@@ -25,7 +25,7 @@ jobs:
       working-directory: src/frontend
 
     - name: 'Deploy to Azure Web App'
-      uses: azure/webapps-deploy@v2d
+      uses: azure/webapps-deploy@v2
       with:
         app-name: 'moh-data-collection'
         folder: src/frontend
