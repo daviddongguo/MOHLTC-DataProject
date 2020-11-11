@@ -21,14 +21,13 @@ jobs:
         node-version: '12.x'
 
     - name: npm install, build, and test
-      run: yarn install 
+      run: yarn install --no-optional
       working-directory: src/frontend
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'moh-data-collection'
-        folder: src/frontend
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_87423bc93cc94f20abeedadf42aee15b }}
         package: .
