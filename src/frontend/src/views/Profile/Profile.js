@@ -1,30 +1,28 @@
-import React, {Component} from 'react';
-import {getProfile} from "../../controller/userManager";
-import {Fade, Chip, Typography, Card} from "@material-ui/core";
+import { Card, Chip, Fade, Typography, withStyles } from "@material-ui/core";
+import { Clear as No, Done as Yes } from "@material-ui/icons";
 import PropTypes from "prop-types";
-import {withStyles} from "@material-ui/core";
+import React, { Component } from "react";
+import { getProfile } from "../../controller/userManager";
 
-import {Clear as No, Done as Yes} from "@material-ui/icons";
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     padding: 20,
   },
   chip: {
     margin: 3,
-    shadow: ''
+    shadow: "",
   },
   title: {
-    color: '#383838'
+    color: "#383838",
   },
   subTitle: {
-    color: '#a4a4a4'
+    color: "#a4a4a4",
   },
   content: {
-    fontFamily: 'Roboto',
+    fontFamily: "Roboto",
     lineHeight: 2,
-    color: '#444444'
-  }
+    color: "#444444",
+  },
 });
 
 class Profile extends Component {
@@ -32,39 +30,55 @@ class Profile extends Component {
     super(props);
     this.state = {
       profile: {
-        username: '',
-        email: '',
-        firstName: '',
-        lastName: 'Loading...',
-        phoneNumber: '',
-        active: '',
+        username: "",
+        email: "",
+        firstName: "",
+        lastName: "Loading...",
+        phoneNumber: "",
+        active: "",
         permissions: [],
-        groupNumber: '',
-        validated: '',
-        createDate: '',
-      }
+        groupNumber: "",
+        validated: "",
+        createDate: "",
+      },
     };
-    getProfile().then(profile => profile && this.setState({profile}));
+    getProfile()
+      .then((profile) => {
+        console.log("profile: " + profile);
+        profile && this.setState({ profile });
+      })
+      .catch((err) => {
+        console.log("Err: " + err);
+      });
   }
 
   permissions() {
     const permissions = [];
     this.state.profile.permissions.forEach((permission, idx) => {
       permissions.push(
-        <Chip key={idx} color={"primary"} label={permission} variant="outlined" className={this.props.classes.chip}/>
-      )
+        <Chip
+          key={idx}
+          color={"primary"}
+          label={permission}
+          variant="outlined"
+          className={this.props.classes.chip}
+        />
+      );
     });
     return permissions;
   }
 
   yesOrNoIcon(bool) {
-    return bool ? <Yes fontSize="small" style={{color: 'green'}}/>
-      : <No fontSize="small" style={{color: 'red'}}/>
+    return bool ? (
+      <Yes fontSize="small" style={{ color: "green" }} />
+    ) : (
+      <No fontSize="small" style={{ color: "red" }} />
+    );
   }
 
   render() {
-    const {classes} = this.props;
-    const {profile} = this.state;
+    const { classes } = this.props;
+    const { profile } = this.state;
 
     return (
       <Fade in={true} timeout={500}>
@@ -72,31 +86,42 @@ class Profile extends Component {
           <Typography variant="h5" gutterBottom>
             My Profile
           </Typography>
-          <hr/>
-          <Typography variant="button" gutterBottom className={classes.subTitle}>
+          <hr />
+          <Typography
+            variant="button"
+            gutterBottom
+            className={classes.subTitle}
+          >
             Basic Information
           </Typography>
           <div className={classes.content}>
-            Username: {profile.username} <br/>
-            Email: {profile.email} <br/>
-            First name: {profile.firstName} <br/>
-            Last name: {profile.lastName} <br/>
-            Phone: {profile.phoneNumber} <br/>
+            Username: {profile.username} <br />
+            Email: {profile.email} <br />
+            First name: {profile.firstName} <br />
+            Last name: {profile.lastName} <br />
+            Phone: {profile.phoneNumber} <br />
           </div>
-          <hr/>
-          <Typography variant="button" gutterBottom className={classes.subTitle}>
+          <hr />
+          <Typography
+            variant="button"
+            gutterBottom
+            className={classes.subTitle}
+          >
             Account Information
           </Typography>
           <div className={classes.content}>
-            Registration Date: {new Date(profile.createDate).toLocaleString()} <br/>
-            Group Number: {profile.groupNumber} <br/>
-            Validated: {this.yesOrNoIcon(profile.validated)}<br/>
-            Active: {this.yesOrNoIcon(profile.active)}<br/>
-            Permissions: {this.permissions()} <br/>
+            Registration Date: {new Date(profile.createDate).toLocaleString()}{" "}
+            <br />
+            Group Number: {profile.groupNumber} <br />
+            Validated: {this.yesOrNoIcon(profile.validated)}
+            <br />
+            Active: {this.yesOrNoIcon(profile.active)}
+            <br />
+            Permissions: {this.permissions()} <br />
           </div>
         </Card>
       </Fade>
-    )
+    );
   }
 }
 

@@ -220,6 +220,13 @@ export async function getAllUsers() {
 }
 
 export async function getProfile() {
-  const response = await axios.get(config.server + "/api/profile", axiosConfig);
-  if (check(response)) return response.data.profile;
+  try {
+    const response = await axios.get(
+      config.server + "/api/profile",
+      axiosConfig
+    );
+    if (check(response)) return response.data.profile;
+  } catch (err) {
+    console.log(err);
+  }
 }
