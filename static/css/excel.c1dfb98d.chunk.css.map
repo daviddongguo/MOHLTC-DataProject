@@ -1,0 +1,1 @@
+{"version":3,"sources":["style.css"],"names":[],"mappings":"AAAA,OACE,YACF,CAEA,IACE,cAAe,CACf,mCAAqC,CACrC,iBAAkB,CAClB,aACF","file":"excel.c1dfb98d.chunk.css","sourcesContent":[":focus {\n  outline: none;\n}\n\n#fx {\n  font-size: 18px;\n  font-family: \"Times New Roman\", serif;\n  font-style: italic;\n  margin: 0 10px;\n}\n"]}
