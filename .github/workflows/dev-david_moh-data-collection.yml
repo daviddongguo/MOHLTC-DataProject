@@ -5,7 +5,6 @@ name: Build and deploy Node.js app to Azure Web App - moh-data-collection
 
 on:
   push:
-    paths: src/frontend
     branches:
       - dev-david
     
@@ -25,10 +24,12 @@ jobs:
     - name: install
       run: 
         yarn install --no-optional
+      working-directory: src/frontend
       
     - name: buil
       run: 
-        yarn run build:azure      
+        yarn run build:azure  
+      working-directory: src/frontend    
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
@@ -36,4 +37,4 @@ jobs:
         app-name: 'moh-data-collection'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_87423bc93cc94f20abeedadf42aee15b }}
-        package: ./build
+        package: ./src/frontend/build
