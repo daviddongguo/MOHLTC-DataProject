@@ -20,14 +20,14 @@ jobs:
       with:
         node-version: '12.x'
 
-    - name: npm install
+    - name: install
       run: 
         yarn install --no-optional
       working-directory: src/frontend
       
-    - name: npm install
+    - name: buil
       run: 
-        yarn run build      
+        yarn run build:azure      
       working-directory: src/frontend
 
     - name: 'Deploy to Azure Web App'
