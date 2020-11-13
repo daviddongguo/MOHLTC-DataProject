@@ -60,7 +60,8 @@
     "worker-plugin": "^3.1.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "cross-env NODE_ENV=production SERVER_URL=https://aqueous-dusk-20175.herokuapp.com react-app-rewired start",
+    "startLocal": "react-app-rewired start",
     "build": "react-app-rewired build",
     "build:aws": "cross-env NODE_ENV=production SERVER_URL=http://ec2-3-13-195-83.us-east-2.compute.amazonaws.com PUBLIC_URL=http://ec2-3-13-195-83.us-east-2.compute.amazonaws.com/react react-app-rewired build",
     "build:pivotal": "cross-env NODE_ENV=production SERVER_URL=https://mohltc.cfapps.io PUBLIC_URL=https://mohltc.cfapps.io/react react-app-rewired build",
