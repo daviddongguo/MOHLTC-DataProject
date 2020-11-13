@@ -89,13 +89,20 @@ module.exports = {
 	},
 
 	get_profile: (req, res, next) => {
-		const username = req.session.user.username;
-		getUser(username, (err, user) => {
-			if (err) {
-				return res.status(500).json({success: false, message: err});
-			}
-			return res.json({success: true, profile: user});
-		});
+		console.log('inside: get_profile method');
+		const user = req.session.user;
+		console.log(user);
+		if (user) {
+			return res.status(200).json({success: true, profile: user});
+		}
+		return res.status(500).json({success: false, message: 'no user login.'});
+		// TODO: searching database is not necessary when uses token
+		// getUser(username, (err, user) => {
+		// 	if (err) {
+		// 		return res.status(500).json({success: false, message: err});
+		// 	}
+		// 	return res.status(200).json({success: true, profile: user});
+		// });
 	},
 	// Query the current user logged in.
 	get_current_logged_in_user: (req, res) => {

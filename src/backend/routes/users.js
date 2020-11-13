@@ -22,10 +22,13 @@ router.get('/api/users/current', user_controller.get_current_logged_in_user);
 router.get('/api/getuserbyusername/:username', user_controller.get_user);
 
 router.get('/api/isloggedin', function (req, res) {
-	if (req.isAuthenticated()) {
-		return res.json({isLoggedIn: true});
+	const user = req.session.user;
+	console.log(user);
+	console.log('inside isloggedin: ' + user);
+	if (user) {
+		return res.status(200).json({isLoggedIn: true});
 	}
-	return res.json({isLoggedIn: false});
+	return res.status(404).json({isLoggedIn: false});
 });
 
 router.get('/api/organization_details', user_controller.getOrganizationDetails);

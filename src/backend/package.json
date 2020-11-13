@@ -52,7 +52,6 @@
 		"mochawesome": "^4.0.0"
 	},
 	"scripts": {
-		"start": "node app.js",
 		"test": "mocha test/main.js test/users test/ --recursive --exit --check-leaks -R mochawesome",
 		"test:david": "nodemon --exec mocha --recursive --timeout 5000 -R min",
 		"build": "grunt",
@@ -60,7 +59,7 @@
 		"watch": "grunt watch",
 		"prod": "grunt prod",
 		"aws": "NODE_ENV=production node app.js",
-		"heroku": "NODE_ENV=productionOnHeroku node app.js",
+		"start": "NODE_ENV=production node app.js",
 		"build:frontend-pivotal": "cd ./frontend/ && npm run build:pivotal",
 		"pivotal:build": "grunt pivotal:build",
 		"pivotal:publish": "grunt pivotal:publish",
