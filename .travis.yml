@@ -6,8 +6,7 @@ before_script:
 services:
   - mongodb
 install:
-  - cd ./src/frontend&& yarn install
-  - cd ../backend && yarn install
+  - cd ./src/backend && yarn install
 
 script:
   - echo $cleverMongoDbfile >config/cleverMongoDb.js
