@@ -80,10 +80,12 @@ app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/documents', express.static(path.join(__dirname, 'documents')));
 app.use('/test', express.static(path.join(__dirname, 'mochawesome-report')));
 
+//
 app.use(
 	cookieSession({
 		name: 'session',
 		secret: config.superSecret,
+		proxy: true,
 		cookie: {maxAge: 24 * 3600 * 1000}, // 24 hours
 	})
 );

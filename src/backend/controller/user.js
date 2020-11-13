@@ -411,7 +411,8 @@ module.exports = {
 	},
 
 	user_log_in: (req, res, next) => {
-		console.log('sign in');
+		console.log('log in');
+		console.log(req.body);
 		passport.authenticate('local', function (err, user, info) {
 			if (err) {
 				return next(err);
@@ -423,16 +424,6 @@ module.exports = {
 				if (err) {
 					return next(err);
 				}
-				//  Organization.find({}, (err, organization) => {
-				//       console.log(organization);
-				//       for (var i = 0; i < organization.length; i++) {
-				//           config.organizations[organization[i].name] = organization[i].groupNumber;
-				//           if (organization[i].groupNumber > config.maxGroupNumber) {
-				//                 config.maxGroupNumber = organization[i].groupNumber;
-				//              }
-				//           }
-				//       });
-				// set user info in the session
 				req.session.user = user;
 				let redirectUrl = '/profile';
 				return res.json({

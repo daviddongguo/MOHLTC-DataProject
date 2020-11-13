@@ -44,7 +44,7 @@ router.post(
 // POST request for user sign in
 router.post('/api/login/local', user_controller.user_log_in);
 
-router.post('/api/login/ldap', registration_ldap_controller.user_auth_login);
+// router.post('/api/login/ldap', registration_ldap_controller.user_auth_login);
 
 router.post('/api/reset-password', user_controller.user_reset_password);
 
