@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/LesterLyu/MOHLTC-DataProject.git"
   },
+  "homepage": "https://yourgithubname.github.io/MOHLTC-DataProject",
   "dependencies": {
     "@coreui/coreui": "^2.1.9",
     "@coreui/react": "^2.5.2",
@@ -24,6 +25,7 @@
     "date-fns": "^2.0.0-beta.4",
     "fast-formula-parser": "git+https://github.com/LesterLyu/fast-formula-parser.git",
     "font-awesome": "^4.7.0",
+    "gh-pages": "^3.1.0",
     "material-table": "^1.48.0",
     "mdi-material-ui": "^6.3.0",
     "mui-datatables": "2.8.0",
@@ -63,6 +65,7 @@
     "build:aws": "cross-env NODE_ENV=production SERVER_URL=http://ec2-3-13-195-83.us-east-2.compute.amazonaws.com PUBLIC_URL=http://ec2-3-13-195-83.us-east-2.compute.amazonaws.com/react react-app-rewired build",
     "build:pivotal": "cross-env NODE_ENV=production SERVER_URL=https://mohltc.cfapps.io PUBLIC_URL=https://mohltc.cfapps.io/react react-app-rewired build",
     "build:azure": "cross-env NODE_ENV=production SERVER_URL=https://aqueous-dusk-20175.herokuapp.com PUBLIC_URL=https://moh-data-collection.azurewebsites.net/react react-app-rewired build",
+    "deploy:github": "gh-pages -d build",
     "test": "react-app-rewired test",
     "test:cov": "react-app-rewired test --coverage",
     "test:debug": "react-app-rewired --inspect-brk test --runInBand",
