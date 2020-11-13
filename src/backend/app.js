@@ -86,7 +86,10 @@ app.use(
 		name: 'session',
 		secret: config.superSecret,
 		proxy: true,
-		cookie: {maxAge: 24 * 3600 * 1000}, // 24 hours
+		cookie: {
+			secure: true,
+			maxAge: 24 * 3600 * 1000,
+		},
 	})
 );
 

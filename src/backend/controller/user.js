@@ -425,6 +425,7 @@ module.exports = {
 					return next(err);
 				}
 				req.session.user = user;
+				console.log(user);
 				let redirectUrl = '/profile';
 				return res.json({
 					success: true,
