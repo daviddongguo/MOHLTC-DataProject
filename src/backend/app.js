@@ -73,8 +73,14 @@ const whitelist = [
 	'http://localhost:3003',
 	'http://localhost:3000',
 	'https://moh-data-collection.azurewebsites.net',
+	'https://moh-data-collection.azurewebsites.net/react',
+	'https://daviddongguo.github.io',
+	'https://daviddongguo.github.io/react',
+	'https://daviddongguo.github.io/MOHLTC-DataProject',
+	'https://daviddongguo.github.io/MOHLTC-DataProject/react',
 	'http://ec2-3-16-106-158.us-east-2.compute.amazonaws.com',
 	'http://ec2-3-16-106-158.us-east-2.compute.amazonaws.com/react',
+
 	'http://dataproject-env.u2t3prjsea.us-east-2.elasticbeanstalk.com',
 	'http://dataproject-env.u2t3prjsea.us-east-2.elasticbeanstalk.com/react',
 ];
