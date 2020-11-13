@@ -37,4 +37,4 @@ jobs:
         app-name: 'moh-data-collection'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_87423bc93cc94f20abeedadf42aee15b }}
-        package: ./build
+        package: ./src/frontend/build
