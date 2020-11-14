@@ -28,8 +28,9 @@ describe('Local Authentication', function () {
 				password: 'test',
 			})
 			.then((res) => {
-				expect(res).to.have.status(200);
+				expect(res).to.have.status(201);
 				expect(res.body.success).to.be.true;
+				console.log(res.body);
 				done();
 			})
 			.catch(function (err) {
@@ -47,6 +48,7 @@ describe('Local Authentication', function () {
 			.then((res) => {
 				expect(res).to.have.status(200);
 				expect(res.body.success).to.be.true;
+				console.log(res.body);
 				done();
 			})
 			.catch(function (err) {

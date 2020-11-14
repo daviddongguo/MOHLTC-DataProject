@@ -413,7 +413,6 @@ module.exports = {
 	// TODO: use token
 	user_log_in: (req, res, next) => {
 		console.log('log in');
-		console.log(req.body);
 		passport.authenticate('local', function (err, user, info) {
 			if (err) {
 				return next(err);
@@ -421,16 +420,19 @@ module.exports = {
 			if (!user) {
 				return res.status(401).json({success: false, message: info.message});
 			}
+
 			req.logIn(user, function (err) {
 				if (err) {
 					return next(err);
 				}
-				req.session.user = user;
-				console.log(user);
+
+				// req.session.user = user;
+				// console.log(user);
 				let redirectUrl = '/profile';
-				return res.json({
+				return res.status(200).json({
 					success: true,
-					username: user.username,
+					// username: user.username,
+					token: generateToken(user.username, 24 * 60),
 					redirect: redirectUrl,
 				});
 			});
