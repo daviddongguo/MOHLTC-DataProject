@@ -4,7 +4,7 @@ const userLogin = require('../userLogin');
 
 const {agent} = require('../config');
 
-describe('To check if the user is registered', function () {
+describe.skip('To check if the user is registered', function () {
 	const oneUsername = 'lester';
 	const oneEmail = 'lester@mail.com';
 

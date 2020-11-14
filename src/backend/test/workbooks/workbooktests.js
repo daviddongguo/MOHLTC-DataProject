@@ -4,7 +4,7 @@ const expect = chai.expect;
 const {agent} = require('../config');
 const userLogin = require('../userLogin');
 
-describe('CRUD workbook', function () {
+describe.skip('CRUD workbook', function () {
 	before(async () => {
 		try {
 			await userLogin();

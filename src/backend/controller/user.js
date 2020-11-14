@@ -410,6 +410,7 @@ module.exports = {
 		});
 	},
 
+	// TODO: use token
 	user_log_in: (req, res, next) => {
 		console.log('log in');
 		console.log(req.body);

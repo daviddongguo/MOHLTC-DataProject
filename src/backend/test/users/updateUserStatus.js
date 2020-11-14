@@ -4,7 +4,7 @@ const expect = chai.expect;
 const {agent} = require('../config');
 const userLogin = require('../userLogin');
 
-describe("Update a user's status. Used to disable or enable an account.", function () {
+describe.skip("Update a user's status. Used to disable or enable an account.", function () {
 	const usernameTest = 'test';
 	const passwordTest = 'test';
 
