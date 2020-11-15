@@ -39,6 +39,8 @@ class Login extends Component {
 
       isPasswordError: false,
       passwordErrorMessage: "",
+
+      token: "",
     };
     this.usernameRef = React.createRef();
   }
@@ -104,8 +106,12 @@ class Login extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     loginLocal(this.state.username, this.state.password)
-      .then((response) => {
+      .then((res) => {
         console.log("login successfully");
+        console.table(res.data);
+        this.setState({
+          token: res.data.token,
+        });
         this.props.history.push("/");
       })
       .catch((err) => {

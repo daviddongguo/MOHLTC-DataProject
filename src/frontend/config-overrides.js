@@ -19,8 +19,8 @@ module.exports = {
       new webpack.EnvironmentPlugin({
         NODE_ENV: "development",
         DEBUG: false,
-        // SERVER_URL: "http://localhost:3000",
-        SERVER_URL: "https://aqueous-dusk-20175.herokuapp.com",
+        SERVER_URL: "http://localhost:3000",
+        // SERVER_URL: "https://aqueous-dusk-20175.herokuapp.com",
         PUBLIC_URL: "http://localhost:3003",
       })
     );
