@@ -51,7 +51,27 @@ const getUser = (username, cb) => {
 	});
 };
 
+const getUserById = async (userId) => {
+	return await User.findById(userId, {password: 0});
+};
+
 module.exports = {
+	verifyToken: (req, res, next) => {
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			return res.status(403).send({auth: false, message: 'No token provided'});
+		}
+		jwt.verify(token, config.superSecret, (err, decoded) => {
+			if (err) {
+				return res
+					.status(500)
+					.send({auth: false, message: 'Failed to authenticate token.'});
+			}
+			// if everything good, save to request for use in other routes
+			req.userId = decoded.id;
+			next();
+		});
+	},
 	// get_user: getUser
 	get_user: (req, res) => {
 		const username = req.params.username;
@@ -72,15 +92,6 @@ module.exports = {
 	},
 
 	user_sign_up_local: (req, res, next) => {
-		// if (parseInt(req.body.groupNumber) === 0) {
-		// 	return res
-		// 		.status(400)
-		// 		.json({
-		// 			success: false,
-		// 			message: 'Group number 0 is reserved for special usage.',
-		// 		});
-		// }
-		// check if email is taken (passport will check other errors, i.e. username taken)
 		User.findOne({username: req.body.username}, (err, user) => {
 			if (err) {
 				console.log(err);
@@ -172,21 +183,18 @@ module.exports = {
 		});
 	},
 
-	get_profile: (req, res, next) => {
+	get_profile: async (req, res) => {
 		console.log('inside: get_profile method');
-		const user = req.session.user;
-		console.log(user);
-		if (user) {
-			return res.status(200).json({success: true, profile: user});
+		console.log(req.userId);
+		try {
+			const user = await getUserById(req.userId);
+			if (user) {
+				return res.status(200).json({success: true, profile: user});
+			}
+			return res.status(404).json({success: false, message: 'no user found.'});
+		} catch (error) {
+			return res.status(500).json({success: false, message: 'no user login.'});
 		}
-		return res.status(500).json({success: false, message: 'no user login.'});
-		// TODO: searching database is not necessary when uses token
-		// getUser(username, (err, user) => {
-		// 	if (err) {
-		// 		return res.status(500).json({success: false, message: err});
-		// 	}
-		// 	return res.status(200).json({success: true, profile: user});
-		// });
 	},
 	// Query the current user logged in.
 	get_current_logged_in_user: (req, res) => {
@@ -427,6 +435,7 @@ module.exports = {
 		});
 	},
 
+	//TODO: delete
 	user_sign_up: (req, res, next) => {
 		// check if email is taken (passport will check other errors, i.e. username taken)
 		User.findOne({username: req.body.username}, (err, user) => {
@@ -494,7 +503,6 @@ module.exports = {
 		});
 	},
 
-	// TODO: use token
 	user_log_in: (req, res, next) => {
 		console.log('log in');
 		passport.authenticate('local', function (err, user, info) {
@@ -516,7 +524,6 @@ module.exports = {
 				return res.status(200).json({
 					success: true,
 					user: user,
-					// username: user.username,
 					accessToken: generateToken(user._id, 24 * 60),
 					redirect: redirectUrl,
 				});

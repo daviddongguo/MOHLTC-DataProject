@@ -1,14 +1,23 @@
 const express = require('express');
-const passport = require('passport');
-const config = require('../config/config');
-const user_controller = require('../controller/user');
-const registration_local_controller = require('../controller/registration/local');
-const {groupController} = require('../controller/v2');
 let router = express.Router();
+var bodyParser = require('body-parser');
+
+const verifyToken = require('../controller/user');
+const user_controller = require('../controller/user');
+const {groupController} = require('../controller/v2');
+const User = require('../models/user');
+
+router.use(bodyParser.urlencoded({extended: false}));
+router.use(bodyParser.json());
 
 router.post('/api/signup/local', user_controller.user_sign_up_local);
 router.post('/api/login/local', user_controller.user_log_in);
-router.get('/api/profile', user_controller.get_profile);
+router.get(
+	'/api/profile',
+	user_controller.verifyToken,
+	user_controller.get_profile
+);
+
 router.get('/api/users', user_controller.get_user_all);
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
 router.get('/api/logout', user_controller.user_log_out);
