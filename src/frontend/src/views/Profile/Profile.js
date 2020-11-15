@@ -44,7 +44,6 @@ class Profile extends Component {
     };
     getProfile()
       .then((profile) => {
-        console.log("profile: " + profile);
         profile && this.setState({ profile });
       })
       .catch((err) => {

@@ -103,10 +103,10 @@ class Login extends Component {
     }
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = loginLocal(this.state.username, this.state.password);
+      const res = await loginLocal(this.state.username, this.state.password);
       console.log("login successfully");
       console.log(res.accessToken);
       this.setState({

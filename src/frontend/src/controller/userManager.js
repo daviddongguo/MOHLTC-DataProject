@@ -131,6 +131,7 @@ export async function loginLocal(username, password) {
       },
       axiosConfig
     );
+    console.log("Inside loginLocal method");
     console.log(response.data);
     if (response.data.accessToken) {
       localStorage.setItem("user", JSON.stringify(response.data));

@@ -21,11 +21,10 @@ router.get(
 router.get('/api/users', user_controller.get_user_all);
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
 router.get('/api/logout', user_controller.user_log_out);
-router.get('/api/isloggedin', function (req, res) {
-	const user = req.session.user;
-	console.log(user);
-	console.log('inside isloggedin: ' + user);
-	if (user) {
+router.get('/api/isloggedin', user_controller.verifyToken, function (req, res) {
+	const userId = req.userId;
+	console.log('inside isloggedin: ' + userId);
+	if (userId) {
 		return res.status(200).json({isLoggedIn: true});
 	}
 	return res.status(404).json({isLoggedIn: false});
