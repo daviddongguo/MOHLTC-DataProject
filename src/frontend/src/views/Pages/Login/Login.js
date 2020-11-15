@@ -105,23 +105,22 @@ class Login extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    loginLocal(this.state.username, this.state.password)
-      .then((res) => {
-        console.log("login successfully");
-        console.table(res.data);
-        this.setState({
-          token: res.data.token,
-        });
-        this.props.history.push("/");
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-        const errorMessage = err.response.data.message;
-        this.setState({
-          isPasswordError: true,
-          passwordErrorMessage: errorMessage,
-        });
+    try {
+      const res = loginLocal(this.state.username, this.state.password);
+      console.log("login successfully");
+      console.log(res.accessToken);
+      this.setState({
+        token: res.accessToken,
       });
+      this.props.history.push("/");
+    } catch (err) {
+      console.log(err.response.data.message);
+      const errorMessage = err.response.data.message;
+      this.setState({
+        isPasswordError: true,
+        passwordErrorMessage: errorMessage,
+      });
+    }
   };
 
   render() {

@@ -110,7 +110,8 @@ export async function isLoggedIn() {
 }
 
 export async function logout() {
-  await axios.get(config.server + "/api/logout", axiosConfig);
+  localStorage.removeItem("user");
+  //   await axios.get(config.server + "/api/logout", axiosConfig);
   window.location.hash = "login";
 }
 
@@ -121,29 +122,25 @@ export async function logout() {
  * @return {AxiosPromise<any>}
  */
 export async function loginLocal(username, password) {
-  return await axios.post(
-    config.server + "/api/login/local",
-    {
-      username: username,
-      password: password,
-    },
-    axiosConfig
-  );
+  try {
+    const response = await axios.post(
+      config.server + "/api/login/local",
+      {
+        username: username,
+        password: password,
+      },
+      axiosConfig
+    );
+    if (response.data.accessToken) {
+      localStorage.setItem("user", JSON.stringify(response.data));
+    }
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 }
 
-/**
- *
- * @param setup
- * @param username
- * @param password
- * @param firstName
- * @param lastName
- * @param selectedOrganization
- * @param email
- * @param phoneNumber
- * @param selectedGroupNumber
- * @returns {Promise<AxiosResponse<T>>}
- */
 export async function signUpLocal(
   setup,
   username,
@@ -171,20 +168,8 @@ export async function signUpLocal(
   );
 }
 
-/**
- *
- * @param email
- * @return {Promise<void>}
- */
 export async function sendPasswordResetEmail(email) {}
 
-/**
- * Update permissions to other users. **Only for admin.**
- * @return {Promise}
- * @param username
- * @param permissions
- * @param active
- */
 export async function updatePermission(username, permissions, active) {
   // console.log(username, permissions, active);
   const response = await axios.post(

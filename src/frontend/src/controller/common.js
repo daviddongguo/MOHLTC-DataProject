@@ -1,14 +1,22 @@
 import axios from "axios";
 import config from "../config/config";
+const user = JSON.parse(localStorage.getItem("user"));
 
-export const axiosConfig = {withCredentials: true};
-export {config};
+let tokenHeader = {};
+if (user && user.accessToken) {
+  tokenHeader = { "x-access-token": user.accessToken };
+}
+
+export const axiosConfig = {
+  headers: tokenHeader,
+  withCredentials: true,
+};
+export { config };
 
 export function buildErrorParams(e) {
-  if (e.response && e.response.data &&  e.response.data.message)
-    return [e.toString() + '\nDetails: ' + e.response.data.message, 'error'];
-  else
-    return [e.stack, 'error'];
+  if (e.response && e.response.data && e.response.data.message)
+    return [e.toString() + "\nDetails: " + e.response.data.message, "error"];
+  else return [e.stack, "error"];
 }
 
 /**
@@ -18,7 +26,7 @@ export function buildErrorParams(e) {
  */
 export function check(response) {
   if (response.data.loginRequired) {
-    window.location.hash = 'login';
+    window.location.hash = "login";
     return false;
   }
   return true;
@@ -31,7 +39,10 @@ export function check(response) {
  */
 export async function generateObjectId(number = 1) {
   try {
-    const response = await axios.get(config.server + '/api/v2/generate/id/' + number, axiosConfig);
+    const response = await axios.get(
+      config.server + "/api/v2/generate/id/" + number,
+      axiosConfig
+    );
     if (check(response)) {
       return response.data.ids;
     }
