@@ -25,6 +25,7 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
+      working-directory: src/backend
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
@@ -32,4 +33,4 @@ jobs:
         app-name: 'moh-data-collection-backend'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_4dd6a52a01c4495bb5b89e37cabac0fb }}
-        package: .
+        package: ./src/backend
