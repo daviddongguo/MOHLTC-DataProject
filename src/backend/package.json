@@ -60,7 +60,7 @@
 		"prod": "grunt prod",
 		"aws": "NODE_ENV=production node app.js",
 		"start": "NODE_ENV=production node app.js",
-		"local": "nodemon app.js",
+		"start:local": "nodemon app.js",
 		"build:frontend-pivotal": "cd ./frontend/ && npm run build:pivotal",
 		"pivotal:build": "grunt pivotal:build",
 		"pivotal:publish": "grunt pivotal:publish",
