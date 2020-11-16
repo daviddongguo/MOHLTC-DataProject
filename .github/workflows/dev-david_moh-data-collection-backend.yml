@@ -1,13 +1,12 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - moh-data-collection
+name: Build and deploy Node.js app to Azure Web App - moh-data-collection-backend
 
 on:
   push:
     branches:
       - dev-david
-    
 
 jobs:
   build-and-deploy:
@@ -21,20 +20,17 @@ jobs:
       with:
         node-version: '12.x'
 
-    - name: install
-      run: 
-        yarn install --no-optional
-      working-directory: src/frontend
-      
-    - name: buil
-      run: 
-        yarn run build:azure  
-      working-directory: src/frontend    
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+      working-directory: src/backend
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'moh-data-collection'
+        app-name: 'moh-data-collection-backend'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_87423bc93cc94f20abeedadf42aee15b }}
-        package: ./src/frontend/build
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_4dd6a52a01c4495bb5b89e37cabac0fb }}
+        package: ./src/backend
