@@ -49,18 +49,13 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public/moh.css')));
 
 // MongoDB
-mongoose.connect(
-	process.env.NODE_ENV === 'test'
-		? config.testDatabase
-		: cleverDatabase.database,
-	{
-		useNewUrlParser: true,
-		useFindAndModify: false,
-		useCreateIndex: true,
-		useUnifiedTopology: true,
-		//To use the new Server Discover and Monitoring engine, pass option { useUnifiedTopology: true } to the MongoClient constructor.
-	}
-);
+mongoose.connect(cleverDatabase.database, {
+	useNewUrlParser: true,
+	useFindAndModify: false,
+	useCreateIndex: true,
+	useUnifiedTopology: true,
+	//To use the new Server Discover and Monitoring engine, pass option { useUnifiedTopology: true } to the MongoClient constructor.
+});
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
