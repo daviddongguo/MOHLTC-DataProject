@@ -13,7 +13,7 @@ const {
 
 const {verifyToken} = require('../../controller/helpers');
 
-// router.get('/api/v2/organizations/:mode?', getOrganizations);
+router.get('/api/v2/organizations/:mode?', getOrganizations);
 
 router.post(
 	'/api/v2/organizations/:name/users/:userId',

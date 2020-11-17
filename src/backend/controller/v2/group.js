@@ -38,7 +38,7 @@ module.exports = {
 	getGroups: async (req, res, next) => {
 		try {
 			const groups = await Group.find({});
-			return res.json({groups});
+			return res.status(200).json({groups});
 		} catch (e) {
 			next(e);
 		}

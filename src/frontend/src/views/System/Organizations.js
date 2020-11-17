@@ -1,11 +1,11 @@
-import {MuiThemeProvider, createMuiTheme, makeStyles, Typography} from "@material-ui/core";
-import React, {useEffect, useState, useMemo} from "react";
-import {getOrganizations, updateOrganization, deleteOrganization, getOrganizationTypes} from '../../controller/system';
-import {buildErrorParams} from '../../controller/common';
+import {createMuiTheme, makeStyles, MuiThemeProvider, Typography} from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
+import React, {useEffect, useMemo, useState} from "react";
+import {buildErrorParams} from '../../controller/common';
+import {deleteOrganization, getOrganizations, getOrganizationTypes, updateOrganization} from '../../controller/system';
+import {getAllUsers} from "../../controller/userManager";
 import CustomToolbar from "../AttCat/components/CustomToolbar";
 import OrgAddDialog from './components/OrgAddDialog';
-import {getAllUsers} from "../../controller/userManager";
 
 const getMuiTheme = () => createMuiTheme({
   overrides: {
@@ -40,7 +40,7 @@ export default function Organizations(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    getOrganizations().then(organizations => {
+    getOrganizations(true).then(organizations => {
       setOrganizations(organizations)
     });
     getOrganizationTypes().then(types => setTypes(types.map(type => [type._id, type.name])));

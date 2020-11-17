@@ -1,16 +1,15 @@
-import React, { Component } from "react";
+import { MenuItem, TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Button, Card, CardBody, Col, Container, Form, Row } from "reactstrap";
 import {
-  signUpLocal,
-  checkUsername,
   checkEmail,
+  checkUsername,
   getAllGroups,
   getAllOrganizations,
+  signUpLocal,
 } from "../../../controller/userManager";
-
-import { Button, Card, CardBody, Col, Container, Form, Row } from "reactstrap";
-import { Link } from "react-router-dom";
-import { TextField, MenuItem } from "@material-ui/core";
 
 class Register extends Component {
   constructor(props) {
@@ -77,7 +76,7 @@ class Register extends Component {
       this.state.selectedGroupNumber
     )
       .then((response) => {
-        this.props.history.push(response.data.redirect);
+        this.props.history.push(response.redirect);
       })
       .catch((err) => {
         if (typeof err.response.data.message === "string") {

@@ -34,17 +34,6 @@ function isEmail(email) {
 	return emailReg.test(email);
 }
 
-// function generateToken(user, expireTime) {
-// 	let payload = {
-// 		id: user._id,
-// 		username: user.username,
-// 		permissions: user.permissions,
-// 	};
-// 	return jwt.sign(payload, config.superSecret, {
-// 		expiresIn: expireTime * 60,
-// 	});
-// }
-
 const getUser = (username, cb) => {
 	User.findOne({username: username}, (err, user) => {
 		if (err) {
@@ -59,25 +48,6 @@ const getUserById = async (userId) => {
 };
 
 module.exports = {
-	verifyToken: (req, res, next) => {
-		var token = req.headers['x-access-token'];
-		if (!token) {
-			return res.status(403).send({auth: false, message: 'No token provided'});
-		}
-		jwt.verify(token, config.superSecret, (err, decoded) => {
-			if (err) {
-				return res
-					.status(500)
-					.send({auth: false, message: 'Failed to authenticate token.'});
-			}
-			// if everything good, save to request for use in other routes
-			req.userId = decoded.id;
-			req.username = decoded.username;
-			req.permissions = decoded.permissions;
-			next();
-		});
-	},
-	// get_user: getUser
 	get_user: (req, res) => {
 		const username = req.params.username;
 		getUser(username, (err, user) => {
@@ -99,27 +69,26 @@ module.exports = {
 	user_sign_up_local: (req, res, next) => {
 		User.findOne({username: req.body.username}, (err, user) => {
 			if (err) {
-				console.log(err);
 				return res.status(500).json({success: false, message: err});
 			}
 			if (user) {
 				return res
-					.status(400)
+					.status(404)
 					.json({success: false, message: 'Username taken.'});
 			}
 			User.findOne({email: req.body.email}, (err, user) => {
 				if (err) {
 					console.log(err);
-					return res.json({success: false, message: err});
+					return res.status(500).json({success: false, message: err});
 				}
 				if (user) {
 					return res
-						.status(400)
+						.status(404)
 						.json({success: false, message: 'Email taken.'});
 				}
 				if (!isEmail(req.body.email)) {
 					return res
-						.status(400)
+						.status(404)
 						.json({success: false, message: 'Email format error.'});
 				}
 				// all good
@@ -130,37 +99,26 @@ module.exports = {
 					groupNumber: req.body.groupNumber || 1,
 					phoneNumber: req.body.phoneNumber || '',
 					organization: req.body.organization || '',
-					// FIXME: delete permissions when deploying
-					// permissions: req.body.permissions,
 					validated: req.body.validated || false,
 					type: 2, // system admin=0, form manager=1, user=2
 					email: req.body.email,
 				});
-				// if (config.disableEmailValidation) {
-				//     newUser.validated = true;
-				// }
 				User.register(newUser, req.body.password, (err, user) => {
 					if (err) {
 						console.log(err);
-						return res.status(400).json({success: false, message: err});
+						return res.status(500).json({success: false, message: err});
 					}
 					console.log('success sign up');
 					// sign in right after
 					passport.authenticate('local')(req, res, () => {
 						// set user info in the session
 						// req.session.user = user;
-						if (config.disableEmailValidation) {
-							return res.status(201).json({
-								success: true,
-								user: user,
-								accessToken: generateToken(user, 24 * 60),
-								redirect: '/profile',
-							});
-						}
-						// create token and sent by email
-						const token = generateToken(user, 60);
-						sendMail.sendValidationEmail(req.body.email, token, (info) => {
-							return res.json({success: true, redirect: '/validate-now'});
+
+						return res.status(201).json({
+							success: true,
+							user: user,
+							accessToken: generateToken(user, 24 * 60),
+							redirect: '/profile',
 						});
 					});
 				});

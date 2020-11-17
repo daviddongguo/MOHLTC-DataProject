@@ -33,9 +33,9 @@ export async function getAllGroups() {
 }
 
 export async function getAllOrganizations(groupNumber) {
-  let urlStr = config.server + "/api/v2/organizations";
+  let urlStr = config.server + "/api/v2/organizations?mode=simplified";
   if (groupNumber) {
-    urlStr += "?groupNumber=" + groupNumber;
+    urlStr += "&groupNumber=" + groupNumber;
   }
   try {
     const result = await axios.get(urlStr);
@@ -154,7 +154,7 @@ export async function signUpLocal(
   phoneNumber,
   selectedGroupNumber
 ) {
-  return await axios.post(
+  const response = await axios.post(
     config.server + (setup ? "/api/setup" : "/api/signup/local"),
     {
       username: username,
@@ -168,6 +168,12 @@ export async function signUpLocal(
     },
     axiosConfig
   );
+
+  if (response.data.accessToken) {
+    localStorage.setItem("user", JSON.stringify(response.data));
+  }
+
+  return response.data;
 }
 
 export async function sendPasswordResetEmail(email) {}

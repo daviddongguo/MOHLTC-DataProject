@@ -4,23 +4,25 @@ const User = require('../../models/user');
 const {checkPermission, Permission, error, removeNil} = require('../helpers');
 
 module.exports = {
-	// getOrganizations: async (req, res, next) => {
-	//     if (!checkPermission(req, Permission.SYSTEM_MANAGEMENT)) {
-	//         return next(error.api.NO_PERMISSION);
-	//     }
-	//     const groupNumber = req.session.user.groupNumber;
-	//     try {
-	//         let organizations;
-	//         if (req.params.mode === 'simplified') {
-	//             organizations = await Organization.find({groupNumber}, 'name')
-	//         } else {
-	//             organizations = await Organization.find({groupNumber}).populate('users managers types');
-	//         }
-	//         return res.json({organizations});
-	//     } catch (e) {
-	//         next(e);
-	//     }
-	// },
+	getOrganizations: async (req, res, next) => {
+		// if (!checkPermission(req, Permission.SYSTEM_MANAGEMENT)) {
+		//     return next(error.api.NO_PERMISSION);
+		// }
+		const groupNumber = req.groupNumber || 1;
+		try {
+			let organizations;
+			if (req.query.mode === 'simplified') {
+				organizations = await Organization.find({groupNumber}, 'name');
+			} else {
+				organizations = await Organization.find({groupNumber}).populate(
+					'users managers types'
+				);
+			}
+			return res.status(200).json({organizations});
+		} catch (e) {
+			next(e);
+		}
+	},
 
 	// Add or update an organization for current group
 	updateOrganization: async (req, res, next) => {

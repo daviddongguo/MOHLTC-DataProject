@@ -16,7 +16,7 @@ router.get('/api/profile', verifyToken, user_controller.get_profile);
 router.get('/api/users', user_controller.get_user_all);
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
 // router.get('/api/logout', user_controller.user_log_out);
-router.get('/api/isloggedin', user_controller.verifyToken, function (req, res) {
+router.get('/api/isloggedin', verifyToken, function (req, res) {
 	const userId = req.userId;
 	console.log('inside isloggedin: ' + userId);
 	if (userId) {

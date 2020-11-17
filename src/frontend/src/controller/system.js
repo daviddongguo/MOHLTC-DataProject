@@ -24,7 +24,9 @@ export async function setGroupName(name) {
 
 export async function getOrganizations(simplified) {
   const response = await axios.get(
-    config.server + "/api/v2/organizations" + (simplified ? "/simplified" : ""),
+    config.server +
+      "/api/v2/organizations" +
+      (!simplified ? "/simplified" : ""),
     axiosConfig
   );
   if (check(response)) {
