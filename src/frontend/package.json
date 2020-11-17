@@ -8,9 +8,8 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/daviddongguo/MOHLTC-DataProject"
+    "url": "https://github.com/daviddongguo/MOHLTC-DataProject.git"
   },
-  "homepage": "https://daviddongguo.github.io/MOHLProject",
   "dependencies": {
     "@coreui/coreui": "^2.1.9",
     "@coreui/react": "^2.5.2",
