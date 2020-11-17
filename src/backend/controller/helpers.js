@@ -34,6 +34,7 @@ module.exports = {
 		let payload = {
 			id: user._id,
 			username: user.username,
+			groupNumber: user.groupNumber,
 			permissions: user.permissions,
 		};
 		return jwt.sign(payload, config.superSecret, {
@@ -56,6 +57,7 @@ module.exports = {
 			req.userId = decoded.id;
 			req.username = decoded.username;
 			req.permissions = decoded.permissions;
+			req.groupNumber = decoded.groupNumber;
 			next();
 		});
 	},
