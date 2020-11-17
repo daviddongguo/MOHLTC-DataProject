@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const passwordValidator = require('password-validator');
 
 var schema = new passwordValidator();
+const {generateToken} = require('./helpers');
 
 schema
 	.is()
@@ -33,16 +34,16 @@ function isEmail(email) {
 	return emailReg.test(email);
 }
 
-function generateToken(user, expireTime) {
-	let payload = {
-		id: user._id,
-		username: user.username,
-		permissions: user.permissions,
-	};
-	return jwt.sign(payload, config.superSecret, {
-		expiresIn: expireTime * 60,
-	});
-}
+// function generateToken(user, expireTime) {
+// 	let payload = {
+// 		id: user._id,
+// 		username: user.username,
+// 		permissions: user.permissions,
+// 	};
+// 	return jwt.sign(payload, config.superSecret, {
+// 		expiresIn: expireTime * 60,
+// 	});
+// }
 
 const getUser = (username, cb) => {
 	User.findOne({username: username}, (err, user) => {
