@@ -85,9 +85,9 @@ export async function switchUserValidate(user, validatedValue) {
     if (user.organization) {
       const resOrganization = await axios.post(
         config.server +
-          "/api/v2/organization/" +
+          "/api/v2/organizations/" +
           user.organization +
-          "/" +
+          "/users/" +
           user._id,
         { validated: validatedValue },
         axiosConfig
