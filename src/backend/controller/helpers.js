@@ -7,8 +7,6 @@ module.exports = {
 	error,
 
 	checkPermission: (req, permission) => {
-		//FIXME: use token
-		//return req.session.user.permissions.includes(permission);
 		if (req.permissions) {
 			if (req.permissions.includes(permission)) {
 				return true;

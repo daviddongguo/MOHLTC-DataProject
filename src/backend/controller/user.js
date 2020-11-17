@@ -111,8 +111,6 @@ module.exports = {
 					console.log('success sign up');
 					// sign in right after
 					passport.authenticate('local')(req, res, () => {
-						// set user info in the session
-						// req.session.user = user;
 
 						return res.status(201).json({
 							success: true,

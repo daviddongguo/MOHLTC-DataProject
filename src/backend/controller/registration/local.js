@@ -28,12 +28,10 @@ module.exports = {
 	// use token
 	user_sign_up_local: (req, res, next) => {
 		if (parseInt(req.body.groupNumber) === 0) {
-			return res
-				.status(400)
-				.json({
-					success: false,
-					message: 'Group number 0 is reserved for special usage.',
-				});
+			return res.status(400).json({
+				success: false,
+				message: 'Group number 0 is reserved for special usage.',
+			});
 		}
 		// check if email is taken (passport will check other errors, i.e. username taken)
 		User.findOne({username: req.body.username}, (err, user) => {
@@ -86,16 +84,12 @@ module.exports = {
 					console.log('success sign up');
 					// sign in right after
 					passport.authenticate('local')(req, res, () => {
-						// set user info in the session
-						// req.session.user = user;
 						if (config.disableEmailValidation) {
-							return res
-								.status(201)
-								.json({
-									success: true,
-									token: generateToken(req.body.username, 24 * 60),
-									redirect: '/profile',
-								});
+							return res.status(201).json({
+								success: true,
+								token: generateToken(req.body.username, 24 * 60),
+								redirect: '/profile',
+							});
 						}
 						// create token and sent by email
 						const token = generateToken(req.body.username, 60);

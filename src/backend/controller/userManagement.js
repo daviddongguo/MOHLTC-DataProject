@@ -182,7 +182,7 @@ module.exports = {
 				.status(403)
 				.json({success: false, message: error.api.NO_PERMISSION});
 		}
-		const groupNumber = req.session.user.groupNumber || 0;
+		const groupNumber = req.groupNumber || 0;
 		let query = {groupNumber: groupNumber};
 		if (parseInt(groupNumber) === 0) {
 			query = {};
