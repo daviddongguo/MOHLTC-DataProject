@@ -33,9 +33,11 @@ function isEmail(email) {
 	return emailReg.test(email);
 }
 
-function generateToken(id, expireTime) {
+function generateToken(user, expireTime) {
 	let payload = {
-		id: id,
+		id: user._id,
+		username: user.username,
+		permissions: user.permissions,
 	};
 	return jwt.sign(payload, config.superSecret, {
 		expiresIn: expireTime * 60,
@@ -69,6 +71,8 @@ module.exports = {
 			}
 			// if everything good, save to request for use in other routes
 			req.userId = decoded.id;
+			req.username = decoded.username;
+			req.permissions = decoded.permissions;
 			next();
 		});
 	},
@@ -148,12 +152,12 @@ module.exports = {
 							return res.status(201).json({
 								success: true,
 								user: user,
-								accessToken: generateToken(req.body.username, 24 * 60),
+								accessToken: generateToken(user, 24 * 60),
 								redirect: '/profile',
 							});
 						}
 						// create token and sent by email
-						const token = generateToken(req.body._id, 60);
+						const token = generateToken(user, 60);
 						sendMail.sendValidationEmail(req.body.email, token, (info) => {
 							return res.json({success: true, redirect: '/validate-now'});
 						});
@@ -288,9 +292,7 @@ module.exports = {
 	},
 
 	edit_validated: async (req, res, next) => {
-		if (
-			!req.session.user.permissions.includes(config.permissions.USER_MANAGEMENT)
-		) {
+		if (!req.permissions.includes(config.permissions.USER_MANAGEMENT)) {
 			return res
 				.status(403)
 				.json({success: false, message: error.api.NO_PERMISSION});
@@ -524,7 +526,7 @@ module.exports = {
 				return res.status(200).json({
 					success: true,
 					user: user,
-					accessToken: generateToken(user._id, 24 * 60),
+					accessToken: generateToken(user, 24 * 60),
 					redirect: redirectUrl,
 				});
 			});
@@ -567,21 +569,21 @@ module.exports = {
 		});
 	},
 
-	user_send_reset_email: (req, res, next) => {
-		console.log(req.body);
-		const token = generateToken(req.body.username, 60);
-		sendMail.sendResetEmail(req.body.email, token, (info) => {
-			return res.json({success: true, message: info});
-		});
-	},
+	// user_send_reset_email: (req, res, next) => {
+	// 	console.log(req.body);
+	// 	const token = generateToken(req.body.username, 60);
+	// 	sendMail.sendResetEmail(req.body.email, token, (info) => {
+	// 		return res.json({success: true, message: info});
+	// 	});
+	// },
 
-	user_send_validation_email: (req, res, next) => {
-		// create token and sent by email
-		const token = generateToken(req.session.user.username, 60);
-		sendMail.sendValidationEmail(req.session.user.email, token, (info) => {
-			return res.json({success: true, message: info});
-		});
-	},
+	// user_send_validation_email: (req, res, next) => {
+	// 	// create token and sent by email
+	// 	const token = generateToken(req.session.user.username, 60);
+	// 	sendMail.sendValidationEmail(req.session.user.email, token, (info) => {
+	// 		return res.json({success: true, message: info});
+	// 	});
+	// },
 
 	reset_password_link: (req, res, next) => {
 		var newPassword = req.body.newPassword;
