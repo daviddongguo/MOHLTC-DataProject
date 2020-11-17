@@ -33,7 +33,7 @@ const usersRouter = require('./routes/users');
 
 const packageRouter = require('./routes/v2/package02');
 
-const LdapStrategy = require('passport-ldapauth');
+const organizationRouter = require('./routes/v2/organization');
 
 const userManagementRouter = require('./routes/userManagement');
 
@@ -104,6 +104,7 @@ app.use('/', usersRouter); // API or pages below this requires authentication
 // api endpoints that need authentication
 
 app.use('/', packageRouter);
+app.use('/', organizationRouter);
 app.use('/', userManagementRouter);
 app.use('/', ...RouterV2);
 
