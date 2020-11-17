@@ -2,25 +2,20 @@ const express = require('express');
 let router = express.Router();
 var bodyParser = require('body-parser');
 
-const verifyToken = require('../controller/user');
 const user_controller = require('../controller/user');
+const {verifyToken} = require('../controller/helpers');
 const {groupController} = require('../controller/v2');
-const User = require('../models/user');
 
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(bodyParser.json());
 
 router.post('/api/signup/local', user_controller.user_sign_up_local);
 router.post('/api/login/local', user_controller.user_log_in);
-router.get(
-	'/api/profile',
-	user_controller.verifyToken,
-	user_controller.get_profile
-);
+router.get('/api/profile', verifyToken, user_controller.get_profile);
 
 router.get('/api/users', user_controller.get_user_all);
 router.get('/api/users/current', user_controller.get_current_logged_in_user);
-router.get('/api/logout', user_controller.user_log_out);
+// router.get('/api/logout', user_controller.user_log_out);
 router.get('/api/isloggedin', user_controller.verifyToken, function (req, res) {
 	const userId = req.userId;
 	console.log('inside isloggedin: ' + userId);
@@ -46,9 +41,9 @@ router.get('/api/organization_details', user_controller.getOrganizationDetails);
 
 router.post('/api/reset-password', user_controller.user_reset_password);
 
-router.post('/api/send-reset-email', user_controller.user_send_reset_email);
+// router.post('/api/send-reset-email', user_controller.user_send_reset_email);
 
-router.get('/reset/:token', user_controller.password_reset_validate);
+// router.get('/reset/:token', user_controller.password_reset_validate);
 
 router.post('/api/reset-password-link', user_controller.reset_password_link);
 
@@ -74,13 +69,17 @@ router.get('/api/users/:username/active', user_controller.check_user_active);
 router.put('/api/users/:username/active', user_controller.edit_user_active);
 router.put('/api/users/active/:username', user_controller.edit_user_active);
 
-router.put('/api/users/validated/:username', user_controller.edit_validated);
+router.put(
+	'/api/users/validated/:username',
+	verifyToken,
+	user_controller.edit_validated
+);
 
 // GET send account verification email
-router.get(
-	'/api/send-validation-email',
-	user_controller.user_send_validation_email
-);
+// router.get(
+// 	'/api/send-validation-email',
+// 	user_controller.user_send_validation_email
+// );
 
 // update profile
 router.post('/api/update-profile', user_controller.update_user_info);

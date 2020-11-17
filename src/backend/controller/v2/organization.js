@@ -1,7 +1,7 @@
 const {Organization, OrganizationType} = require('../../models/organization');
 const User = require('../../models/user');
 
-const {checkPermission, Permission, error, removeNil} = require('./helpers');
+const {checkPermission, Permission, error, removeNil} = require('../helpers');
 
 module.exports = {
 	// getOrganizations: async (req, res, next) => {

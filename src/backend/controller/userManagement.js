@@ -12,23 +12,21 @@ function isEmail(email) {
 }
 
 function checkPermission(req) {
-	return req.session.user.permissions.includes(
-		config.permissions.USER_MANAGEMENT
-	);
+	return req.permissions.includes(config.permissions.USER_MANAGEMENT);
 }
 
 let allPermissions = Object.keys(config.permissions).map(function (key) {
 	return config.permissions[key];
 });
 
-function generateToken(username, expireTime) {
-	let payload = {
-		username: username,
-	};
-	return jwt.sign(payload, config.superSecret, {
-		expiresIn: expireTime * 60,
-	});
-}
+// function generateToken(username, expireTime) {
+// 	let payload = {
+// 		username: username,
+// 	};
+// 	return jwt.sign(payload, config.superSecret, {
+// 		expiresIn: expireTime * 60,
+// 	});
+// }
 
 module.exports = {
 	checkPermission: checkPermission,
@@ -184,7 +182,7 @@ module.exports = {
 				.status(403)
 				.json({success: false, message: error.api.NO_PERMISSION});
 		}
-		const groupNumber = req.session.user.groupNumber;
+		const groupNumber = req.session.user.groupNumber || 0;
 		let query = {groupNumber: groupNumber};
 		if (parseInt(groupNumber) === 0) {
 			query = {};

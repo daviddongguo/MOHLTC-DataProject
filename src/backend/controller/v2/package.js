@@ -1,4 +1,4 @@
-const {checkPermission, Permission, error} = require('./helpers');
+const {checkPermission, Permission, error} = require('../helpers');
 const Package = require('../../models/package/package');
 const PackageValue = require('../../models/package/packageValue');
 const Value = require('../../models/workbook/value');

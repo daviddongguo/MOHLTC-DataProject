@@ -1,6 +1,6 @@
 const Workbook = require('../../models/workbook/workbook');
 const Sheet = require('../../models/workbook/sheet');
-const {checkPermission, Permission} = require('./helpers');
+const {checkPermission, Permission} = require('../helpers');
 const error = require('../../config/error');
 const mongoose = require('mongoose');
 

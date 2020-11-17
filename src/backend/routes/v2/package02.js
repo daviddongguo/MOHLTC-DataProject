@@ -5,7 +5,7 @@ const Workbook = require('../../models/workbook/workbook');
 const Value = require('../../models/workbook/value');
 const Package = require('../../models/package/package');
 const Organization = require('../../models/organization/organization');
-const {checkPermission, Permission} = require('../../controller/v2/helpers');
+const {checkPermission, Permission} = require('../../controller/helpers');
 const error = require('../../config/error');
 const config = require('../../config/config');
 const mongoose = require('mongoose');
@@ -24,12 +24,10 @@ router.get('/api/packages/:packagename?', async (req, res, next) => {
 	try {
 		const dbPackages = await Package.find(packageQuery);
 		if (!dbPackages[0]) {
-			return res
-				.status(400)
-				.json({
-					success: false,
-					message: `Packages (${req.params.packagename}) Not Found.`,
-				});
+			return res.status(400).json({
+				success: false,
+				message: `Packages (${req.params.packagename}) Not Found.`,
+			});
 		}
 
 		const {attributeId, categoryId} = req.query;
@@ -77,12 +75,10 @@ router.get(
 		if (req.params.username) {
 			const dbUser = await User.findOne({username: req.params.username});
 			if (!dbUser) {
-				return res
-					.status(400)
-					.json({
-						success: false,
-						message: `User (${req.params.username}) does not exist.`,
-					});
+				return res.status(400).json({
+					success: false,
+					message: `User (${req.params.username}) does not exist.`,
+				});
 			}
 			const userOrganization = await Organization.findOne({
 				name: dbUser.organization,
@@ -96,12 +92,10 @@ router.get(
 		try {
 			const dbPackages = await Package.find(packageQuery);
 			if (!dbPackages[0]) {
-				return res
-					.status(400)
-					.json({
-						success: false,
-						message: `Packages (${req.params.packagename}) Not Found.`,
-					});
+				return res.status(400).json({
+					success: false,
+					message: `Packages (${req.params.packagename}) Not Found.`,
+				});
 			}
 
 			const {attributeId, categoryId} = req.query;
@@ -157,12 +151,10 @@ router.post('/api/admin/packages', async (req, res, next) => {
 	} = req.body;
 	// input items can not be empty
 	if (!startDate || !endDate) {
-		return res
-			.status(400)
-			.json({
-				success: false,
-				message: 'startDate and endDate can not be empty.',
-			});
+		return res.status(400).json({
+			success: false,
+			message: 'startDate and endDate can not be empty.',
+		});
 	}
 	if (startDate >= endDate) {
 		return res
@@ -327,12 +319,10 @@ router.put('/api/admin/packages/:packagename', async (req, res, next) => {
 		groupNumber,
 	});
 	if (!dbPackage) {
-		return res
-			.status(400)
-			.json({
-				success: false,
-				message: `Package (${queryPackageName}) does not exist.`,
-			});
+		return res.status(400).json({
+			success: false,
+			message: `Package (${queryPackageName}) does not exist.`,
+		});
 	}
 
 	if (
@@ -573,12 +563,10 @@ router.put('/api/admin/packagevalues', async (req, res, next) => {
 		groupNumber: queryGroupNumber,
 	});
 	if (!dbPackage) {
-		return res
-			.status(400)
-			.json({
-				success: false,
-				message: `Package (${queryPackageName}) does not exist.`,
-			});
+		return res.status(400).json({
+			success: false,
+			message: `Package (${queryPackageName}) does not exist.`,
+		});
 	}
 
 	const PackageValues = dbPackage.values;
@@ -642,21 +630,17 @@ router.delete('/api/admin/packages/:packagename', async (req, res, next) => {
 			groupNumber: queryGroupNumber,
 		});
 		if (!dbPackage) {
-			return res
-				.status(400)
-				.json({
-					success: false,
-					message: `Package (${queryPackageName}) does not exist.`,
-				});
+			return res.status(400).json({
+				success: false,
+				message: `Package (${queryPackageName}) does not exist.`,
+			});
 		}
 
 		await Package.findByIdAndDelete(dbPackage._id);
-		return res
-			.status(200)
-			.json({
-				success: true,
-				message: `package (${queryPackageName}) was deleted.`,
-			});
+		return res.status(200).json({
+			success: true,
+			message: `package (${queryPackageName}) was deleted.`,
+		});
 	} catch (e) {
 		next(e);
 	}
