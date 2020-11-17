@@ -1,9 +1,6 @@
 const chai = require('chai');
 const expect = chai.expect;
-
 const config = require('../config');
-const globalConfig = require('../../config/config');
-
 const requester = config.requester;
 
 const User = require('../../models/user');
@@ -11,7 +8,7 @@ const User = require('../../models/user');
 describe('Local Authentication', function () {
 	this.timeout(10000);
 	before(async () => {
-		await User.remove({username: 'three'}, () => {});
+		await User.deleteMany({username: 'three'});
 	});
 	it('register a user named three', (done) => {
 		requester

@@ -6,6 +6,7 @@ const {agent} = require('./config');
 const userLogin = async () => {
 	try {
 		await User.deleteMany({username: 'guest'});
+		await User.deleteMany({username: 'second'});
 
 		await agent.post('/api/signup/local').send({
 			username: 'second',
@@ -20,7 +21,7 @@ const userLogin = async () => {
 			phoneNumber: '1212122',
 			permissions: Object.values(globalConfig.permissions),
 		});
-		// await agent.get('/api/logout');
+		await agent.get('/api/logout');
 		await agent.post('/api/signup/local').send({
 			username: 'guest',
 			email: 'guest@mail.com',
@@ -38,6 +39,7 @@ const userLogin = async () => {
 			username: 'guest',
 			password: 'guest',
 		});
+		console.log('Users prepared, and Guest login');
 	} catch (error) {
 		console.log(err);
 	}
