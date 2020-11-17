@@ -130,6 +130,7 @@ class Login extends Component {
         <Card className={classes.card}>
           <h1>Login</h1>
           <p className="text-muted">Sign In to your account</p>
+          <p className="text-muted">Or use guest / guest</p>
           <TextField
             inputRef={this.usernameRef}
             id="username"
