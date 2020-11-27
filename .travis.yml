@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - 12
+env:
+  - MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING
 before_script:
   - export CI=true
 services:
