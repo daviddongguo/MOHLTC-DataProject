@@ -28,8 +28,8 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      username: "",
-      password: "",
+      username: "guest",
+      password: "guest",
 
       isServerErrormessage: false,
       ServerErrormessage: null,
@@ -130,7 +130,6 @@ class Login extends Component {
         <Card className={classes.card}>
           <h1>Login</h1>
           <p className="text-muted">Sign In to your account</p>
-          <p className="text-muted">Or use guest / guest</p>
           <TextField
             inputRef={this.usernameRef}
             id="username"
